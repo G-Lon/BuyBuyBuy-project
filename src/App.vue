@@ -39,9 +39,10 @@
                 <div id="menu2" class="nav-box menuhd">
                     <ul>
                         <li class="index">
-                            <a href="#" class="">
-                                <span class="out" style="top: 0px;">首页</span>
-                            </a>
+                            <router-link to="/index">
+                              <span class="out" style="top: 0px;">首页</span>
+                            </router-link>
+                                
                         </li>
                         <li class="news">
                             <a href="#" class="">
@@ -82,6 +83,10 @@
         </div>
     </div>
 
+    <!-- 路由出口 -->
+    <router-view></router-view>
+
+
     <!-- 底部 -->
     <div class="footer">
                 <div class="section">
@@ -118,9 +123,13 @@
 </template>
 
 <script>
+export default {
+  name: "app"
+};
 // 引入jQuery包
-import $ from 'jquery';
+import $ from "jquery";
 
+// 导航条的效果
 $(document).ready(function() {
   $("#menu2 li a").wrapInner('<span class="out"></span>');
   $("#menu2 li a").each(function() {
@@ -146,10 +155,6 @@ $(document).ready(function() {
     }
   );
 });
-
-export default {
-  name: "app"
-};
 </script>
 
 <style>
@@ -157,10 +162,12 @@ export default {
 @import url("./assets/statics/site/css/style.css");
 
 /* 引入导航的CSS样式*/
-@import url('./assets/lib/css/style.css');
+@import url("./assets/lib/css/style.css");
 
 /* 覆盖样式*/
 #menu2 {
   background-image: none;
 }
+
+
 </style>

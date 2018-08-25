@@ -1,5 +1,6 @@
 <template>
     <div>
+        <!-- 路径导航开始 -->
         <div class="section">
             <div class="location">
                 <span>当前位置：</span>
@@ -7,18 +8,22 @@
                 <a href="#/site/goodslist" class="router-link-exact-active router-link-active">购物商城</a>
             </div>
         </div>
+        <!-- /路径导航结束 -->
+
+        <!-- 商品列表开始 -->
         <div class="section">
             <div class="wrapper">
                 <div class="wrap-box">
+                    <!-- 商品列表导航 -->
                     <div class="left-220" style="margin: 0px;">
                         <div class="banner-nav">
                             <ul>
-                                <li v-for="(item, index) in catelist" :key="item.id"> 
+                                <li v-for="item in catelist" :key="item.id"> 
                                     <h3>
                                         <i class="iconfont icon-arrow-right"></i>
                                         <span>{{item.title}}</span>
                                         <p>
-                                            <span v-for="(itemSon, indexSon) in item.subcates" :key="itemSon.id">
+                                            <span v-for="itemSon in item.subcates" :key="itemSon.id">
                                                 {{itemSon.title}}&nbsp;
                                             </span>
                                         </p>
@@ -29,7 +34,7 @@
                                                 <a href="/goods/40.html">{{item.title}}</a>
                                             </dt>
                                             <dd>
-                                                <a href="/goods/43.html" v-for="(item, index) in catelist" :key="item.id">{{item.title}}</a>
+                                                <a href="/goods/43.html" v-for="item in catelist" :key="item.id">{{item.title}}</a>
                                             </dd>
                                         </dl>
                                     </div>
@@ -37,35 +42,25 @@
                             </ul>
                         </div>
                     </div>
-                    <!--幻灯片-->
+                    <!-- /商品列表导航 -->
+
+                    <!--轮播图-->
                     <div class="left-705">
                         <div class="banner-img">
-                            <div id="focus-box" class="focus-box">
-                                <ul class="slides">
-                                    <li class="" style="width: 100%;height:100%; float: left; margin-right: -100%; position: relative; opacity: 0; display: block; z-index: 1;">
-                                        <a href="/goods.html">
-                                            <img style="width: 100%;height:100%;" src="http://39.108.135.214:8899/imgs/SJ4EgwosX0wTqvyAvhtFGT1w.jpg" draggable="false">
-                                        </a>
-                                    </li>
-                                    <li style="width: 100%;height:100%; float: left; margin-right: -100%; position: relative; opacity: 1; display: block; z-index: 2;" class="flex-active-slide">
-                                        <a href="/goods.html">
-                                            <img style="width: 100%;height:100%;" src="http://39.108.135.214:8899/upload/201504/20/thumb_201504200314272543.jpg" draggable="false">
-                                        </a>
-                                    </li>
-                                </ul>
-                                <ol class="flex-control-nav flex-control-paging">
-                                    <li>
-                                        <a class="">1</a>
-                                    </li>
-                                    <li>
-                                        <a class="flex-active">2</a>
-                                    </li>
-                                </ol>
-                            </div>
+                        <div class="block">
+                            <!-- <span class="demonstration">Click 指示器触发</span> -->
+                            <el-carousel trigger="click">
+                            <el-carousel-item v-for="item in sliderlist" :key="item.id">
+                                <img :src="item.img_url" alt="">
+                            </el-carousel-item>
+                            </el-carousel>
+                        </div>
 
                         </div>
                     </div>
-                    <!--/幻灯片-->
+                    <!--/轮播图-->
+
+                    <!-- 热销商品 -->
                     <div class="left-220">
                         <ul class="side-img-list">
                             <li v-for="(item, index) in toplist" :key="item.id">
@@ -76,21 +71,23 @@
                                 </div>
                                 <div class="txt-box">
                                     <a href="/goods/show-98.html">{{item.title}}</a>
-                                    <span>{{item.add_time | capitalize
-}}</span>
+                                    <span>{{item.add_time | capitalize}}</span>
                                 </div>
                             </li>
                         </ul>
                     </div>
+                    <!-- /热销商品 -->
                 </div>
             </div>
         </div>
+        <!-- 商品列表结束 -->
 
-        <div class="section" v-for="(item, index) in list" :key="item.level1cateid">
+        <!-- 商品各分类详情开始 -->
+        <div class="section" v-for="item in list" :key="item.level1cateid">
             <div class="main-tit">
                 <h2>{{item.catetitle}}</h2>
                 <p>
-                    <a href="/goods/43.html" v-for="(itemSon, indexSon) in item.level2catelist" :key="itemSon.subcateid">{{itemSon.subcatetitle}}</a>
+                    <a href="/goods/43.html" v-for="itemSon in item.level2catelist" :key="itemSon.subcateid">{{itemSon.subcatetitle}}</a>
                     <a href="/goods/40.html">更多
                         <i>+</i>
                     </a>
@@ -99,10 +96,13 @@
             <div class="wrapper clearfix">
                 <div class="wrap-box">
                     <ul class="img-list">
-                        <li v-for="(item, index) in item.datas" :key="item.artID">
-                            <a href="#/site/goodsinfo/87" class="">
-                                <div class="img-box">
-                                    <img :src="item.img_url">
+                        <li v-for="item in item.datas" :key="item.artID">
+                            <!-- <a :href="'#/site/goodsinfo/' + item.artID"  class=""> -->
+                            <router-link :to="'/site/goodsinfo/' + item.artID">
+                            <div class="img-box">
+                                    <!-- <img :src="item.img_url"> -->
+                                    <!-- 使用懒加载 -->
+                                    <img v-lazy="item.img_url" alt="">
                                 </div>
                                 <div class="info">
                                     <h3>{{item.artTitle}}</h3>
@@ -115,68 +115,97 @@
                                         </span>
                                     </p>
                                 </div>
-                            </a>
+                            </router-link>
+                                
+                            <!-- </a> -->
                         </li>
                     </ul>
                 </div>
             </div>
         </div>
+        <!-- 商品各分类详情结束 -->
         
     </div>
     
 </template>
 
 <script>
-// 引入axios
+// 引入axios,发请求获取数据
 import axios from "axios";
 
-// 引入moment.js
-import moment from "moment";
+// 引入moment.js,处理时间
+// import moment from "moment";
 
+// 要暴露出去的内容
 export default {
   name: "index",
-
+  // 数据
   data: function() {
     return {
       catelist: [],
       sliderlist: [],
       toplist: [],
-      list:[]
-
+      list: []
     };
   },
 
   // 使用Vue的过滤器（管道符） filter
-  filters:{
-      capitalize(value){
-          return moment(value).format("YYYY年MM月DD日")
-      }
-  },
+//   filters: {
+//     //  对时间格式进行过滤
+//     capitalize(value) {
+//       return moment(value).format("YYYY年MM月DD日");
+//     }
+//   },
 
-  //  使用生命周期函数
+  //  使用Vue生命周期函数,
   created() {
-    // 商品列表
-    axios.get("http://47.106.148.205:8899/site/goods/gettopdata/goods")
+    // 获取商品列表数据
+    axios
+      .get("http://47.106.148.205:8899/site/goods/gettopdata/goods")
       .then(response => {
         // console.log(response);
         this.catelist = response.data.message.catelist;
         this.sliderlist = response.data.message.sliderlist;
         this.toplist = response.data.message.toplist;
         //   console.log(this.catelist);
-        //   console.log(this.sliderlist);
+        // console.log(this.sliderlist);
         //   console.log(this.toplist);
       });
 
-    // 商品分类
-    axios.get("http://47.106.148.205:8899/site/goods/getgoodsgroup").then(response=>{
-        console.log(response);
+    // 获取商品分类数据
+    axios
+      .get("http://47.106.148.205:8899/site/goods/getgoodsgroup")
+      .then(response => {
+        // console.log(response);
         this.list = response.data.message;
-    })
+        // console.log(response.data.message);
+      });
   }
 };
 </script>
 
 
 <style>
+.block,
+.el-carousel,
+.el-carousel__container {
+  height: 100%;
+}
+
+/* 轮播图的图片样式设置 */
+.block img {
+  width: 100%;
+  height: 100%;
+}
+
+/* 调整鼠标悬停上去时左右两个按钮的样式 */
+.el-carousel__arrow i {
+  color: gray;
+  font-size: 20px;
+}
+
+.el-carousel__arrow {
+  background-color: rgba(200, 200, 200, 0.6);
+}
 </style>
 

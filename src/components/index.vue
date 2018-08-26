@@ -142,10 +142,10 @@ export default {
   // 数据
   data: function() {
     return {
-      catelist: [],
-      sliderlist: [],
-      toplist: [],
-      list: []
+      catelist: [], // 分类
+      sliderlist: [], // 轮播图
+      toplist: [], // 热门商品
+      list: [], // 商品分类列表
     };
   },
 

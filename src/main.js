@@ -9,15 +9,15 @@ import VueRouter from 'vue-router';
 // 注册VueRouter
 Vue.use(VueRouter)
 
+
 // 引入element-ui
 import ElementUI from 'element-ui';
-
 // 注册element-ui
 Vue.use(ElementUI);
 
+
 // 引入VueLazyload
 import VueLazyload from 'vue-lazyload';
-
 // 注册VueLazyload
 Vue.use(VueLazyload, {
   preLoad: 1.3,
@@ -26,19 +26,32 @@ Vue.use(VueLazyload, {
   // 给loading时需要使用模块引入
   loading: require('./assets/img/loading.gif'),
   attempt: 1
-})
+});
 
+
+// 引入iview
+import iView from 'iview';
+// 引入iview的样式
+import 'iview/dist/styles/iview.css';
+// 注册iview
+Vue.use(iView)
 // 引入element-ui的样式 
 import 'element-ui/lib/theme-chalk/index.css';
 
+
 // 引入首页组件
 import Index from './components/index.vue';
-
 // 引入商品信息组件
 import GoodsInfo from './components/goodsinfo.vue'
 
 // 引入moment.js 
 import moment from 'moment';
+
+
+// 引入放大镜vue zoom
+import ProductZoomer from 'vue-product-zoomer';
+// 注册ProductZoomer
+Vue.use(ProductZoomer)
 
 // 定义全局过滤器
 Vue.filter('capitalize',function(value){

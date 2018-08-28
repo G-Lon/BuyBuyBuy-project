@@ -67,7 +67,7 @@
                                         <dd>
                                             <div id="buyButton" class="btn-buy">
                                                 <button onclick="cartAdd(this,'/',1,'/shopping.html');" class="buy">立即购买</button>
-                                                <button onclick="cartAdd(this,'/',0,'/cart.html');" class="add">加入购物车</button>
+                                                <button @click="shopCart" class="add">加入购物车</button>
                                             </div>
                                         </dd>
                                     </dl>
@@ -102,18 +102,19 @@
                                             <i class="iconfont icon-user-full"></i>
                                         </div>
                                         <div class="conn-box">
+                                            <!-- 评论 -->
                                             <div class="editor">
-                                                <textarea id="txtContent" name="txtContent" sucmsg=" " datatype="*10-1000" nullmsg="请填写评论内容！"></textarea>
+                                                <textarea id="txtContent" v-model.trim="comments" name="txtContent" sucmsg=" " datatype="*10-1000" nullmsg="请填写评论内容！"></textarea>
                                                 <span class="Validform_checktip"></span>
                                             </div>
                                             <div class="subcon">
-                                                <input id="btnSubmit" name="submit" type="submit" value="提交评论" class="submit">
+                                                <input id="btnSubmit" @click="submitComment" name="submit" type="submit" value="提交评论" class="submit">
                                                 <span class="Validform_checktip"></span>
                                             </div>
                                         </div>
                                     </div>
                                     <ul id="commentList" class="list-box">
-                                        <p style="margin: 5px 0px 15px 69px; line-height: 42px; text-align: center; border: 1px solid rgb(247, 247, 247);">暂无评论，快来抢沙发吧！</p>
+                                        <p v-if="commentlist.length ==0" style="margin: 5px 0px 15px 69px; line-height: 42px; text-align: center; border: 1px solid rgb(247, 247, 247);">暂无评论，快来抢沙发吧！</p>
                                         <li v-for="item in commentlist" :key="item.id">
                                             <div class="avatar-box">
                                                 <i class="iconfont icon-user-full"></i>
@@ -129,7 +130,7 @@
                                     </ul>
                                     <div class="page-box" style="margin: 5px 0px 0px 62px;">
                                         <!-- 评论分页 -->
-                                        <Page :total="totalCount" show-sizer show-elevator placement="top" />
+                                        <Page :total="totalCount" :page-size-opts='[5,8,10,16,20]' show-sizer show-elevator placement="top" @on-change="pageIndexChange" @on-page-size-change="pageSizeChange" />
                                     </div>
                                 </div>
                             </div>
@@ -169,6 +170,9 @@
         </div>
         <!-- 商品详情结束 -->
 
+        <!-- 加入购物车的动画图 -->
+        <img class="cartImg" v-if="imglist.length!=0" :src="imglist[0].original_path" alt="">
+
         <!-- 返回顶部 -->
         <BackTop></BackTop>
     </div>
@@ -176,11 +180,14 @@
 
 
 <script>
-// 引入axios发送请求以获取数据
-import axios from "axios";
+// 引入this.$axios发送请求以获取数据
+// import this.$axios from "this.$axios";
 
 // vue2.0-zoom放大镜效果
 // import imgZoom from "vue2.0-zoom";
+
+// 引入jQuery
+import $ from "jquery";
 
 // 要暴露出去的内容
 export default {
@@ -196,8 +203,9 @@ export default {
       buyCount: 0, // 购买数量
       showDiscuss: false,
       pageSize: 1, // 页码
-      pageCount: 5, // 页容量
+      pageCount: 10, // 页容量
       totalCount: 0, // 总页数
+      comments: "", // 评论
       images: {
         // 放大镜图片
         normal_size: [
@@ -227,7 +235,7 @@ export default {
 
   // 时间方法
   methods: {
-    //   轮播图切换效果
+    // 轮播图切换效果
     handleChange() {},
 
     // 封装数据请求方法
@@ -237,10 +245,8 @@ export default {
       // console.log(id);
 
       // 商品详情数据
-      axios
-        .get(
-          `http://47.106.148.205:8899/site/goods/getgoodsinfo/${this.productId}`
-        )
+      this.$axios
+        .get(`site/goods/getgoodsinfo/${this.productId}`)
         .then(response => {
           // console.log(response);
           this.goodsinfo = response.data.message.goodsinfo;
@@ -260,24 +266,86 @@ export default {
           this.images.normal_size = temArr;
           //   console.log(this.images.normal_size);
         });
+    },
 
-      // 商品评论数据
-      axios
+    // 获取评论数据
+    getComments() {
+      this.$axios
         .get(
-          `http://47.106.148.205:8899/site/comment/getbypage/goods/${
-            this.productId
-          }?pageIndex=${this.pageSize}&pageSize=${this.pageCount}`
+          `site/comment/getbypage/goods/${this.productId}?pageIndex=${
+            this.pageSize
+          }&pageSize=${this.pageCount}`
         )
         .then(response => {
-          console.log(response);
+          //   console.log(response);
           this.commentlist = response.data.message;
           this.totalCount = response.data.totalcount;
         });
+    },
+
+    // 提交评论方法
+    submitComment() {
+      // 评论内容不能为空
+      if (this.comments == "") {
+        this.$message.error("抬头不见低头见，评论不要交白卷");
+        return;
+      }
+
+      this.$axios
+        .post(`site/validate/comment/post/goods/${this.productId}`, {
+          commenttxt: this.comments
+        })
+        .then(response => {
+          // console.log(response);
+          this.$message.success(response.data.message);
+
+          // 页面内局部刷新
+          this.getComments();
+
+          // 清空评论输入
+          this.comments = "";
+        });
+    },
+
+    // 页码切换时的函数
+    pageIndexChange(page) {
+    //   console.log(page);
+      this.pageSize = page;
+      this.getComments();
+    },
+
+    // 页容量改变时的函数
+    pageSizeChange(pageS) {
+      // console.log(pageS);
+      // 每次修改完页容量后会自动返回至第一页，此时需要根据页容量重新加载数据    
+      if (this.pageSize == 1) {
+        this.pageCount = pageS;
+        this.getComments();
+      }
+    },
+
+    // 加入购物车事件
+    shopCart(){
+        // 获取图片的位置
+        let imgOffset = $('.add').offset();
+
+        // 获取购物车的位置
+        let cartOffset = $('.icon-cart').offset()
+        // console.log(imgOffset,cartOffset);
+        
+        // 动画效果
+        $('.cartImg').show().addClass('animation').css(imgOffset).animate(cartOffset,1000,function(){
+            $(this).removeClass('animation').hide()
+        })
+
+        
     }
   },
+  // 路由周期函数
   created() {
     //  调用数据请求方法
     this.getGoodsInfo();
+    this.getComments();
   },
 
   // watch 监视
@@ -302,6 +370,7 @@ export default {
 };
 </script>
 
+
 <style lang="less">
 .tab-content img {
   width: 100%;
@@ -323,4 +392,23 @@ export default {
     justify-content: center;
   }
 }
+
+// 购物车动画
+.cartImg {
+  position: absolute;
+  display: none;
+  width: 50px;
+  animation: imgRotate 1s 1 linear;
+}
+
+@keyframes imgRotate {
+    100% {
+        transform: rotate(1440deg) scale(0.5);
+    }
+}
+
+// .cartImg.animation {
+//     transform: rotate(720deg);
+//     transition: all 1s;
+// }
 </style>

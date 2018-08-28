@@ -10,6 +10,14 @@ import VueRouter from 'vue-router';
 Vue.use(VueRouter)
 
 
+// 引入axios，并添加到Vue原型中，成为一个全局
+import axios from 'axios';
+// 抽取axios的基地址
+axios.defaults.baseURL = "http://47.106.148.205:8899";
+// 加入到Vue原型中
+Vue.prototype.$axios = axios;
+
+
 // 引入element-ui
 import ElementUI from 'element-ui';
 // 注册element-ui
@@ -54,7 +62,7 @@ import ProductZoomer from 'vue-product-zoomer';
 Vue.use(ProductZoomer)
 
 // 定义全局过滤器
-Vue.filter('capitalize',function(value){
+Vue.filter('capitalize', function (value) {
   return moment(value).format("YYYY年MM月DD日");
 })
 
@@ -67,18 +75,18 @@ let routes = [
   // },
   // 默认路由
   {
-    path:'/',
-    component:Index
+    path: '/',
+    component: Index
   },
   // 首页路由
   {
-    path:'/index',
-    component:Index
+    path: '/index',
+    component: Index
   },
   // 商品详情路由
   {
-    path:'/site/goodsinfo/:id',
-    component:GoodsInfo
+    path: '/site/goodsinfo/:id',
+    component: GoodsInfo
   },
 
 ]

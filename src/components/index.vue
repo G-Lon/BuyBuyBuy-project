@@ -130,8 +130,8 @@
 </template>
 
 <script>
-// 引入axios,发请求获取数据
-import axios from "axios";
+// 引入this.$axios,发请求获取数据
+// import this.$axios from "this.$axios";
 
 // 引入moment.js,处理时间
 // import moment from "moment";
@@ -160,8 +160,8 @@ export default {
   //  使用Vue生命周期函数,
   created() {
     // 获取商品列表数据
-    axios
-      .get("http://47.106.148.205:8899/site/goods/gettopdata/goods")
+    this.$axios
+      .get("site/goods/gettopdata/goods")
       .then(response => {
         // console.log(response);
         this.catelist = response.data.message.catelist;
@@ -173,8 +173,8 @@ export default {
       });
 
     // 获取商品分类数据
-    axios
-      .get("http://47.106.148.205:8899/site/goods/getgoodsgroup")
+    this.$axios
+      .get("site/goods/getgoodsgroup")
       .then(response => {
         // console.log(response);
         this.list = response.data.message;

@@ -309,7 +309,7 @@ export default {
 
     // 页码切换时的函数
     pageIndexChange(page) {
-    //   console.log(page);
+      //   console.log(page);
       this.pageSize = page;
       this.getComments();
     },
@@ -317,7 +317,7 @@ export default {
     // 页容量改变时的函数
     pageSizeChange(pageS) {
       // console.log(pageS);
-      // 每次修改完页容量后会自动返回至第一页，此时需要根据页容量重新加载数据    
+      // 每次修改完页容量后会自动返回至第一页，此时需要根据页容量重新加载数据
       if (this.pageSize == 1) {
         this.pageCount = pageS;
         this.getComments();
@@ -325,20 +325,28 @@ export default {
     },
 
     // 加入购物车事件
-    shopCart(){
-        // 获取图片的位置
-        let imgOffset = $('.add').offset();
+    shopCart() {
+      if (this.buyCount == 0) {
+        this.$Message.error("你就想买0份吗");
+        return;
+      }
+      // 获取图片的位置
+      let imgOffset = $(".add").offset();
 
-        // 获取购物车的位置
-        let cartOffset = $('.icon-cart').offset()
-        // console.log(imgOffset,cartOffset);
-        
-        // 动画效果
-        $('.cartImg').show().addClass('animation').css(imgOffset).animate(cartOffset,1000,function(){
-            $(this).removeClass('animation').hide()
-        })
+      // 获取购物车的位置
+      let cartOffset = $(".icon-cart").offset();
+      // console.log(imgOffset,cartOffset);
 
-        
+      // 动画效果
+      $(".cartImg").show().stop().addClass("animation").css(imgOffset).animate(cartOffset, 1000, function() {
+          $(this).stop().hide().removeClass("animation");
+        });
+
+      // this.$store.commit('increment')
+      this.$store.commit("cartAdd", {
+        goodId: this.productId,
+        goodNum: this.buyCount
+      });
     }
   },
   // 路由周期函数
@@ -402,9 +410,10 @@ export default {
 }
 
 @keyframes imgRotate {
-    100% {
-        transform: rotate(1440deg) scale(0.5);
-    }
+  100% {
+    transform: rotate(1080deg) scale(0.2);
+    opacity: 0.2;
+  }
 }
 
 // .cartImg.animation {

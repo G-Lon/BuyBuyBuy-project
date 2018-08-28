@@ -9,6 +9,10 @@ import VueRouter from 'vue-router';
 // 注册VueRouter
 Vue.use(VueRouter)
 
+// 导入VueX
+import Vuex from 'vuex'
+// 注册VueX
+Vue.use(Vuex)
 
 // 引入axios，并添加到Vue原型中，成为一个全局
 import axios from 'axios';
@@ -50,7 +54,9 @@ import 'element-ui/lib/theme-chalk/index.css';
 // 引入首页组件
 import Index from './components/index.vue';
 // 引入商品信息组件
-import GoodsInfo from './components/goodsinfo.vue'
+import GoodsInfo from './components/goodsinfo.vue';
+// 引入商品购物车组件
+import Cart from './components/cart.vue';
 
 // 引入moment.js 
 import moment from 'moment';
@@ -65,6 +71,51 @@ Vue.use(ProductZoomer)
 Vue.filter('capitalize', function (value) {
   return moment(value).format("YYYY年MM月DD日");
 })
+
+// 实例化store仓库
+const store = new Vuex.Store({
+  // 数据
+  state: {
+    cartData:JSON.parse(window.localStorage.getItem('cartInfo')) || {}
+  },
+  // 暴露的的改变方法
+  mutations: {
+    // 增加数据方法
+    cartAdd(state,goodInfo){
+      // 查看购物车中是否存在该商品
+      if(state.cartData[goodInfo.goodId] == undefined){
+        // 没有就把数据存进去，
+        // vuex当需要在对象中添加新属性时，要使用Vue.set
+        Vue.set(state.cartData, goodInfo.goodId, goodInfo.goodNum);
+      }else {
+        // 如果有，那么就读取数商品对应的数据加上变化的的数据
+        state.cartData[goodInfo.goodId] += goodInfo.goodNum;
+      }
+    },
+    // 数据更新方法
+    updateGoodsNum(state,goodInfo){
+      state.cartData[goodInfo.goodId] = goodInfo.goodNum
+    },
+    // 删除数据的方法
+    deleteGoods(state,goodId){
+      Vue.delete(state.cartData,goodId);
+    }
+  },
+  getters:{
+    cartCount:state=>{
+      let num = 0;
+      for (const key in state.cartData) {
+        num += state.cartData[key]
+      }
+      return num
+    }
+  }
+})
+
+// 浏览器关闭时将数据保存到 localStorage
+window.onbeforeunload = function(){
+  window.localStorage.setItem('cartInfo',JSON.stringify(store.state.cartData))
+}
 
 // 定义路由
 let routes = [
@@ -88,6 +139,11 @@ let routes = [
     path: '/site/goodsinfo/:id',
     component: GoodsInfo
   },
+  // 商品购物车路由
+  {
+    path:'/cart',
+    component:Cart
+  }
 
 ]
 
@@ -96,8 +152,9 @@ let router = new VueRouter({
   routes
 })
 
-// 
+// 实例化Vue
 new Vue({
   render: h => h(App),
-  router
+  router,
+  store
 }).$mount('#app')

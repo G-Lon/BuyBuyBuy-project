@@ -18,6 +18,8 @@ Vue.use(Vuex)
 import axios from 'axios';
 // 抽取axios的基地址
 axios.defaults.baseURL = "http://47.106.148.205:8899";
+//让ajax携带cookie
+axios.defaults.withCredentials=true;
 // 加入到Vue原型中
 Vue.prototype.$axios = axios;
 
@@ -57,6 +59,10 @@ import Index from './components/index.vue';
 import GoodsInfo from './components/goodsinfo.vue';
 // 引入商品购物车组件
 import Cart from './components/cart.vue';
+// 引入登录组件
+import Login from './components/login.vue';
+// 引入订单组件
+import Order from './components/order.vue';
 
 // 引入moment.js 
 import moment from 'moment';
@@ -143,6 +149,16 @@ let routes = [
   {
     path:'/cart',
     component:Cart
+  },
+  // 登录路由
+  {
+    path:'/login',
+    component:Login
+  },
+  // 订单路由
+  {
+    path:'/order',
+    component:Order
   }
 
 ]

@@ -69,10 +69,9 @@
                                         <el-input-number @change="buycountChange($event,item.id)" size="mini" :min="0" v-model="item.bycount"></el-input-number>
                                     </td>
                                     <td width="104" align="left">{{item.bycount * item.sell_price}}
-                                        <td>
-                                            <td width="54" align="center">
-                                                <el-button @click="delThis(item.id)" type="danger" icon="el-icon-delete" circle></el-button>
-                                            </td>
+                                        <td width="54" align="center">
+                                            <el-button @click="delThis(item.id)" type="danger" icon="el-icon-delete" circle></el-button>
+                                        </td>
                                 </tr>
                                 <!-- 当购物车没有商品时的显示的内容 -->
                                 <tr v-if="cartList.length == 0">
@@ -104,8 +103,11 @@
                     <!--购物车底部-->
                     <div class="cart-foot clearfix">
                         <div class="right-box">
-                            <button class="button" onclick="javascript:location.href='/index.html';">继续购物</button>
-                            <button class="submit" onclick="formSubmit(this, '/', '/shopping.html');">立即结算</button>
+                            <router-link to="/index">
+                                <button class="button">继续购物</button>
+                            </router-link>
+
+                            <button class="submit" @click="payOrder">立即结算</button>
                         </div>
                     </div>
                     <!--购物车底部-->
@@ -128,23 +130,44 @@ export default {
   },
   // 方法
   methods: {
-      buycountChange(num,id){
-        //   console.log(num);
-        // 当数据改变时，store仓库的数据也要发生改变
-        // 调用仓库
-        this.$store.commit('updateGoodsNum',
-            {goodId:id,goodNum:num}
-        ) 
-      },
-      delThis(id){
-          this.$store.commit('deleteGoods',
-            this.cartList.forEach(((v,i)=>{
-                if(v.id == id){
-                    this.cartList.splice(i,1)
-                }
-            }))
-          )
+    buycountChange(num, id) {
+      //   console.log(num);
+      // 当数据改变时，store仓库的数据也要发生改变
+      // 调用仓库
+      this.$store.commit("updateGoodsNum", { goodId: id, goodNum: num });
+    },
+    delThis(id) {
+      this.$store.commit(
+        "deleteGoods",
+        this.cartList.forEach((v, i) => {
+          if (v.id == id) {
+            this.cartList.splice(i, 1);
+          }
+        })
+      );
+    },
+
+    // 点击结算
+    payOrder() {
+      // console.log(this.priceCount);
+      // 判断是否已选择商品
+      if (this.priceCount <= 0) {
+        this.$Message.error("你家有钱啊，不要东西就给钱！");
+      } else {
+        // 判断是否已经登录
+        this.$axios("site/account/islogin").then(response => {
+          // console.log(response);
+          if (response.data.code == "nologin") {
+            // 未登录就跳转到登录页面
+            // 页面跳转需要使用到路由的
+            this.$router.push("/login");
+          } else {
+            // 登录了就跳转到结算页面
+            this.$router.push("/order");
+          }
+        });
       }
+    }
   },
   // 生命周期函数
   created() {
@@ -168,25 +191,25 @@ export default {
     });
   },
   // 计算属性
-  computed:{
-      goodsCount(){
-          let totalCount = 0;
-          this.cartList.forEach(v=>{
-              if(v.isBuy){
-                  totalCount += v.bycount
-              }
-          })
-          return totalCount
-      },
-      priceCount(){
-          let totalPrice = 0;
-          this.cartList.forEach(v=>{
-              if(v.isBuy){
-                  totalPrice += v.bycount * v.sell_price
-              }
-          })
-          return totalPrice
-      }
+  computed: {
+    goodsCount() {
+      let totalCount = 0;
+      this.cartList.forEach(v => {
+        if (v.isBuy) {
+          totalCount += v.bycount;
+        }
+      });
+      return totalCount;
+    },
+    priceCount() {
+      let totalPrice = 0;
+      this.cartList.forEach(v => {
+        if (v.isBuy) {
+          totalPrice += v.bycount * v.sell_price;
+        }
+      });
+      return totalPrice;
+    }
   }
 };
 </script>

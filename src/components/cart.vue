@@ -153,20 +153,32 @@ export default {
       // 判断是否已选择商品
       if (this.priceCount <= 0) {
         this.$Message.error("你家有钱啊，不要东西就给钱！");
-      } else {
-        // 判断是否已经登录
-        this.$axios("site/account/islogin").then(response => {
-          // console.log(response);
-          if (response.data.code == "nologin") {
-            // 未登录就跳转到登录页面
-            // 页面跳转需要使用到路由的
-            this.$router.push("/login");
-          } else {
-            // 登录了就跳转到结算页面
-            this.$router.push("/order");
-          }
-        });
+        return;
       }
+
+    //   选择了商品就跳转到order页面
+    let ids = '';
+    this.cartList.forEach(v=>{
+        if(v.isBuy){
+            ids += v.id;
+            ids += ','
+        }
+    })
+    ids = ids.slice(0,-1);
+    this.$router.push(`/order/${ids}`)
+
+    //   // 判断是否已经登录
+    //   this.$axios("site/account/islogin").then(response => {
+    //     // console.log(response);
+    //     if (response.data.code == "nologin") {
+    //       // 未登录就跳转到登录页面
+    //       // 页面跳转需要使用到路由的
+    //       this.$router.push("/login");
+    //     } else {
+    //       // 登录了就跳转到结算页面
+    //       this.$router.push("/order");
+    //     }
+    //   });
     }
   },
   // 生命周期函数
@@ -182,7 +194,7 @@ export default {
     ids = ids.slice(0, -1);
     // 根据id请求数据
     this.$axios.get(`site/comment/getshopcargoods/${ids}`).then(response => {
-      response.data.message.forEach((v, i) => {
+      response.data.message.forEach(v => {
         v.bycount = cartData[v.id];
         v.isBuy = false;
       });
@@ -211,7 +223,7 @@ export default {
       return totalPrice;
     }
   }
-};
+}
 </script>
 
 <style lang="less">

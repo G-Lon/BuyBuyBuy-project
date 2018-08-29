@@ -11,9 +11,11 @@
             <div class="wrapper">
                 <div class="bg-wrap">
                     <div class="nav-tit">
-                        <a class="selected" href="javascript:;">账户登录</a>
+                        <!-- <a class="selected" href="javascript:;">账户登录</a> -->
+                        <router-link to="/login">账户登录</router-link>
                         <i>|</i>
-                        <a href="/register.html">免费注册</a>
+                        <!-- <a href="/register.html">免费注册</a> -->
+                        <router-link to="/register">免费注册</router-link>
                     </div>
 
                     <div id="loginform" name="loginform" class="login-box">
@@ -45,10 +47,11 @@ export default {
   methods:{
       login(){
           this.$axios.post("site/account/login",{user_name:this.username,password:this.password}).then(response=>{
-              console.log(response);
+            //   console.log(response);
               if(response.data.message == "用户名或密码错误"){
                   this.$Message.error(response.data.message)
               }else{
+                  this.$store.commit('changeLoginStatus',true)
                 //   this.$router.push('/cart')
                 // 返回到上一页面
                 this.$router.back(-1)

@@ -82,7 +82,8 @@ Vue.filter('capitalize', function (value) {
 const store = new Vuex.Store({
   // 数据
   state: {
-    cartData:JSON.parse(window.localStorage.getItem('cartInfo')) || {}
+    cartData:JSON.parse(window.localStorage.getItem('cartInfo')) || {},
+    isLogin:false
   },
   // 暴露的的改变方法
   mutations: {
@@ -105,6 +106,10 @@ const store = new Vuex.Store({
     // 删除数据的方法
     deleteGoods(state,goodId){
       Vue.delete(state.cartData,goodId);
+    },
+    // 改变登录状态
+    changeLoginStatus(state,isLogin){
+      state.isLogin = isLogin 
     }
   },
   getters:{
@@ -157,7 +162,7 @@ let routes = [
   },
   // 订单路由
   {
-    path:'/order',
+    path:'/order/:id',
     component:Order
   }
 
@@ -166,11 +171,39 @@ let routes = [
 // 实例化路由对象
 let router = new VueRouter({
   routes
+});
+
+
+// 增加导航守卫
+router.beforeEach((to,from,next)=>{
+  // 判断要跳转的地址是不是order
+  if(to.path.indexOf('/order/')!=-1){
+    // 如果是就要先判断是否登录
+    axios.get('/site/account/islogin').then(response=>{
+      if(response.data.code == 'nologin'){
+        // 如果没登录，就去登录页面
+        next('/login')
+      }else{
+        // 已经登录就继续执行
+        next()
+      }
+    })
+  }else(
+    next()
+  )
 })
 
 // 实例化Vue
 new Vue({
   render: h => h(App),
   router,
-  store
+  store,
+  // 生命周期函数
+  beforeCreate(){
+    axios.get('site/account/islogin').then(response=>{
+      if(response.data.code == 'logined'){
+        store.state.isLogin = true;
+      }
+    })
+  }
 }).$mount('#app')

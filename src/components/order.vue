@@ -178,24 +178,25 @@
                                         <th width="84" align="center">购买数量</th>
                                         <th width="104" align="left">金额(元)</th>
                                     </tr>
-                                    <tr>
+                                    <!-- 商品订单信息 -->
+                                    <tr v-for="item in goodsList" :key="item.id">
                                         <td width="68">
                                             <a target="_blank" href="/goods/show-89.html">
-                                                <img src="http://39.108.135.214:8899/upload/201504/20/thumb_201504200046589514.jpg" class="img">
+                                                <img :src="item.img_url" class="img">
                                             </a>
                                         </td>
                                         <td>
-                                            <a target="_blank" href="/goods/show-89.html">小米（Mi）小米Note 16G双网通版</a>
+                                            <a target="_blank" href="/goods/show-89.html">{{item.title}}</a>
                                         </td>
                                         <td>
                                             <span class="red">
-                                                ￥2299.00
+                                                ￥{{item.sell_price}}
                                             </span>
                                         </td>
-                                        <td align="center">1</td>
+                                        <td align="center">{{item.buycount}}</td>
                                         <td>
                                             <span class="red">
-                                                ￥2299.00
+                                                ￥{{item.sell_price * item.buycount}}
                                             </span>
                                         </td>
                                     </tr>
@@ -244,26 +245,36 @@
 
 <script>
 export default {
-    name:'order',
-    // 数据
-    data:function () { 
-        return {
-
+  name: "order",
+  // 数据
+  data: function() {
+    return {
+      goodsList: [],
+      totalCount:0,
+      totalPrice:0
+    };
+  },
+  // 方法
+  methods: {},
+  // 生命周期函数
+  created() {
+    // console.log(this.$store.state.cartData);
+    // console.log(this.$route.params.id);
+    let ids = this.$route.params.id;
+    this.$axios.get(`site/comment/getshopcargoods/${ids}`).then(response => {
+      response.data.message.forEach(v => {
+        for (const key in this.$store.state.cartData) {
+          //  console.log(this.$store.state.cartData[key]);
+          if (v.id == key) {
+            v.buycount = this.$store.state.cartData[key];
+          }
         }
-     },
-    // 方法
-    methods:{
-
-    },
-    // 生命周期函数
-    beforeCreate() {
-        this.$axios("site/account/islogin").then(response=>{
-            if(response.data.code == "nologin"){
-                this.$Message.error('小伙儿，未成年禁止入内');
-                this.$router.push('/login')
-            }
-        })
-    },
+      });
+    // console.log(response.data.message);
+      this.goodsList = response.data.message
+      
+    });
+  }
 };
 </script>
 

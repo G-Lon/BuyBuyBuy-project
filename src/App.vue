@@ -12,16 +12,20 @@
                         <a target="_blank" href="#"></a>
                     </div>
                     <div id="menu" class="right-box">
-                        <span style="display: none;">
-                            <a href="" class="">登录</a>
+                        <!-- 登录注册 -->
+                        <span v-show="!$store.state.isLogin">
+                            <!-- <a href="" class="">登录</a> -->
+                            <router-link to="/login">登录</router-link>
                             <strong>|</strong>
-                            <a href="" class="">注册</a>
+                            <!-- <a href="" class="">注册</a> -->
+                            <router-link to="/register">注册</router-link>
                             <strong>|</strong>
                         </span>
-                        <span>
+                        <!-- 会员中心 -->
+                        <span v-show="$store.state.isLogin">
                             <a href="" class="">会员中心</a>
                             <strong>|</strong>
-                            <a>退出</a>
+                            <a @click="logout">退出</a>
                             <strong>|</strong>
                         </span>
                         <router-link to="/cart/">
@@ -120,12 +124,35 @@
                 </div>
             </div>
         </div>
+
+        <!-- 点击退出弹出模态框 -->
+        <el-dialog title="提示" v-show="isShow" width="30%">
+            <span>是否退出</span>
+            <span slot="footer" class="dialog-footer">
+                <el-button>取 消</el-button>
+                <el-button type="primary">确 定</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 
 <script>
 export default {
-  name: "app"
+  name: "app",
+  // 数据
+  data: function() {
+    return {
+      isShow: false
+    };
+  },
+  // 方法
+  methods: {
+    logout() {
+        this.isShow = true;
+        
+
+    }
+  }
 };
 // 引入jQuery包
 import $ from "jquery";

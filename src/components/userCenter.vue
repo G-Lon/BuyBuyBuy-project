@@ -86,7 +86,8 @@
                                             <h3>欢迎您~ ivanyb</h3>
                                             <ul>
                                                 <li>组别：注册会员</li>
-                     d                           <li>手机：13987654321</li>
+                                                d
+                                                <li>手机：13987654321</li>
                                                 <li>Email:ivanyb1@qq.com</li>
                                             </ul>
                                         </div>

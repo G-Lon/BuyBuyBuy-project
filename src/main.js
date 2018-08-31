@@ -63,6 +63,10 @@ import Cart from './components/cart.vue';
 import Login from './components/login.vue';
 // 引入订单组件
 import Order from './components/order.vue';
+// 引入支付订单组件
+import PayOrder from './components/payOder.vue';
+// 引入用户中心组件
+import User from './components/userCenter.vue';
 
 // 引入moment.js 
 import moment from 'moment';
@@ -159,7 +163,8 @@ let routes = [
   // 商品购物车路由
   {
     path: '/cart',
-    component: Cart
+    component: Cart,
+    meta:{chechLogin:true}
   },
   // 登录路由
   {
@@ -169,7 +174,20 @@ let routes = [
   // 订单路由
   {
     path: '/order/:id',
-    component: Order
+    component: Order,
+    meta:{chechLogin:true}
+  },
+  // 支付订单组件
+  {
+    path:'/payOrder/:orderid/',
+    component:PayOrder,
+    meta:{chechLogin:true}
+  },
+  // 用户中心组件
+  {
+    path:'/userCenter/',
+    component:User,
+    meta:{chechLogin:true}
   }
 
 ]
@@ -183,7 +201,7 @@ let router = new VueRouter({
 // 增加导航守卫
 router.beforeEach((to, from, next) => {
   // 判断要跳转的地址是不是order
-  if (to.path.indexOf('/order/') != -1 || to.path.indexOf('/cart/') != -1) {
+  if (to.meta.chechLogin) {
     // 如果是就要先判断是否登录
     axios.get('/site/account/islogin').then(response => {
       if (response.data.code == 'nologin') {

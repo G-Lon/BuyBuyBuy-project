@@ -129,7 +129,7 @@ export default {
     };
   },
   // 方法
-  methods: {
+  mothods: {
     buycountChange(num, id) {
       //   console.log(num);
       // 当数据改变时，store仓库的数据也要发生改变

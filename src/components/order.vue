@@ -44,197 +44,135 @@
                             <span>1、收货地址</span>
                         </h2>
                         <div id="orderForm" name="orderForm" url="">
-                            <div class="form-box address-info">
-                                <dl class="form-group">
-                                    <dt>收货人姓名：</dt>
-                                    <dd>
-                                        <input name="book_id" id="book_id" type="hidden" value="0">
-                                        <input name="accept_name" id="accept_name" type="text" class="input" value="" datatype="s2-20" sucmsg=" " required>
-                                        <span class="Validform_checktip">*收货人姓名</span>
-                                    </dd>
-                                </dl>
-                                <dl class="form-group">
-                                    <dt>所属地区：</dt>
-                                    <dd>
-                                        <select id="province" name="province" class="select">
-                                            <option value="">所属省份</option>
-                                            <option value="北京市">北京市</option>
-                                            <option value="天津市">天津市</option>
-                                            <option value="河北省">河北省</option>
-                                            <option value="山西省">山西省</option>
-                                            <option value="内蒙古自治区">内蒙古自治区</option>
-                                            <option value="辽宁省">辽宁省</option>
-                                            <option value="吉林省">吉林省</option>
-                                            <option value="黑龙江省">黑龙江省</option>
-                                            <option value="上海市">上海市</option>
-                                            <option value="江苏省">江苏省</option>
-                                            <option value="浙江省">浙江省</option>
-                                            <option value="安徽省">安徽省</option>
-                                            <option value="福建省">福建省</option>
-                                            <option value="江西省">江西省</option>
-                                            <option value="山东省">山东省</option>
-                                            <option value="河南省">河南省</option>
-                                            <option value="湖北省">湖北省</option>
-                                            <option value="湖南省">湖南省</option>
-                                            <option value="广东省">广东省</option>
-                                            <option value="广西壮族自治区">广西壮族自治区</option>
-                                            <option value="海南省">海南省</option>
-                                            <option value="重庆市">重庆市</option>
-                                            <option value="四川省">四川省</option>
-                                            <option value="贵州省">贵州省</option>
-                                            <option value="云南省">云南省</option>
-                                            <option value="西藏自治区">西藏自治区</option>
-                                            <option value="陕西省">陕西省</option>
-                                            <option value="甘肃省">甘肃省</option>
-                                            <option value="青海省">青海省</option>
-                                            <option value="宁夏回族自治区">宁夏回族自治区</option>
-                                            <option value="新疆维吾尔自治区">新疆维吾尔自治区</option>
-                                            <option value="香港特别行政区">香港特别行政区</option>
-                                            <option value="澳门特别行政区">澳门特别行政区</option>
-                                            <option value="台湾省">台湾省</option>
-                                            <option value="其它">其它</option>
-                                        </select>
-                                        <select id="city" name="city" class="select">
-                                            <option value="">所属城市</option>
-                                        </select>
-                                        <select id="area" name="area" class="select" datatype="*" sucmsg=" ">
-                                            <option value="">所属地区</option>
-                                        </select>
-                                        <span class="Validform_checktip">*请选择您所在的地区</span>
-                                    </dd>
-                                </dl>
-                                <dl class="form-group">
-                                    <dt>详细地址：</dt>
-                                    <dd>
-                                        <input name="address" id="address" type="text" class="input" value="" datatype="*2-100" sucmsg=" ">
-                                        <span class="Validform_checktip">*除上面所属地区外的详细地址</span>
-                                    </dd>
-                                </dl>
-                                <dl class="form-group">
-                                    <dt>手机号码：</dt>
-                                    <dd>
-                                        <input name="mobile" id="mobile" type="text" class="input" value="" datatype="m" sucmsg=" ">
-                                        <span class="Validform_checktip">*收货人的手机号码</span>
-                                    </dd>
-                                </dl>
-                                <dl class="form-group">
-                                    <dt>联系电话：</dt>
-                                    <dd>
-                                        <input name="telphone" id="telphone" type="text" class="input" value="">
-                                        <span class="Validform_checktip">收货人的联系电话，非必填</span>
-                                    </dd>
-                                </dl>
-                                <dl class="form-group">
-                                    <dt>电子邮箱：</dt>
-                                    <dd>
-                                        <input name="email" id="email" type="text" class="input" value="">
-                                        <span class="Validform_checktip">方便通知订单状态，非必填</span>
-                                    </dd>
-                                </dl>
-                                <dl class="form-group">
-                                    <dt>邮政编码：</dt>
-                                    <dd>
-                                        <input name="post_code" id="post_code" type="txt" class="input code">
-                                        <span class="Validform_checktip">所在地区的邮政编码，非必填</span>
-                                    </dd>
-                                </dl>
-                            </div>
-                            <h2 class="slide-tit">
-                                <span>2、支付方式</span>
-                            </h2>
-                            <ul class="item-box clearfix">
-                                <!--取得一个DataTable-->
-                                <li>
-                                    <label>
+                            <el-form status-icon :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+                                <div class="form-box address-info">
+                                    <el-form-item style="width:500px" label="收货人姓名:" prop="accept_name">
+                                        <el-input style="width:500px" v-model="ruleForm.accept_name"></el-input>
+                                    </el-form-item>
+                                    <el-form-item label="所属地区:" prop="area">
+                                        <v-distpicker @selected="selected" :province="ruleForm.area.province.value" :city="ruleForm.area.city.value" :area="ruleForm.area.area.value"></v-distpicker>
+                                    </el-form-item>
+                                    <el-form-item label="详细地址:" prop="address">
+                                        <el-input style="width:500px" v-model="ruleForm.address"></el-input>
+                                    </el-form-item>
+                                    <el-form-item label="手机号码:" prop="mobile">
+                                        <el-input style="width:500px" v-model="ruleForm.mobile"></el-input>
+                                    </el-form-item>
+                                    <el-form-item label="联系电话:" prop="phone">
+                                        <el-input style="width:500px" v-model="ruleForm.phone"></el-input>
+                                    </el-form-item>
+                                    <el-form-item label="电子邮箱:" prop="email">
+                                        <el-input style="width:500px" v-model="ruleForm.email"></el-input>
+                                    </el-form-item>
+                                    <el-form-item label="邮政编码:" prop="post_code">
+                                        <el-input style="width:200px" v-model="ruleForm.post_code"></el-input>
+                                    </el-form-item>
+                                </div>
+
+                                <h2 class="slide-tit">
+                                    <span>2、支付方式</span>
+                                </h2>
+                                <ul class="item-box clearfix">
+                                    <!--取得一个DataTable-->
+                                    <li>
+                                        <el-radio v-model="ruleForm.payment_id" label="6">在线支付</el-radio>
+                                        <span style="color:#666">手续费:0.00元</span>
+                                        <!-- <label>
                                         <input name="payment_id" type="radio" onclick="paymentAmountTotal(this);" value="1">
                                         <input name="payment_price" type="hidden" value="0.00">在线支付
                                         <em>手续费：0.00元</em>
-                                    </label>
-                                </li>
-                            </ul>
-                            <h2 class="slide-tit">
-                                <span>3、配送方式</span>
-                            </h2>
-                            <ul class="item-box clearfix">
-                                <!--取得一个DataTable-->
-                                <li>
-                                    <label>
+                                    </label> -->
+                                    </li>
+                                </ul>
+                                <h2 class="slide-tit">
+                                    <span>3、配送方式</span>
+                                </h2>
+                                <ul class="item-box clearfix">
+                                    <!--取得一个DataTable-->
+                                    <li>
+                                        <el-radio-group v-model=" ruleForm.express_id">
+                                            <el-radio @change="expressChange(20)" label="1">顺丰快递</el-radio>
+                                            <el-radio @change="expressChange(15)" label="2">中通快递</el-radio>
+                                            <el-radio @change="expressChange(10)" label="3">EMS快递</el-radio>
+                                        </el-radio-group>
+                                        <!-- <label>
                                         <input name="express_id" type="radio" onclick="freightAmountTotal(this);" value="1" datatype="*" sucmsg=" ">
                                         <input name="express_price" type="hidden" value="20.00">顺丰快递
                                         <em>费用：20.00元</em>
                                         <span class="Validform_checktip"></span>
-                                    </label>
-                                </li>
-                            </ul>
-                            <h2 class="slide-tit">
-                                <span>4、商品清单</span>
-                            </h2>
-                            <div class="line15"></div>
-                            <table width="100%" border="0" align="center" cellpadding="8" cellspacing="0" class="cart-table">
-                                <tbody>
-                                    <tr>
-                                        <th colspan="2" align="left">商品信息</th>
-                                        <th width="84" align="left">单价</th>
-                                        <th width="84" align="center">购买数量</th>
-                                        <th width="104" align="left">金额(元)</th>
-                                    </tr>
-                                    <!-- 商品订单信息 -->
-                                    <tr v-for="item in goodsList" :key="item.id">
-                                        <td width="68">
-                                            <a target="_blank" href="/goods/show-89.html">
-                                                <img :src="item.img_url" class="img">
-                                            </a>
-                                        </td>
-                                        <td>
-                                            <a target="_blank" href="/goods/show-89.html">{{item.title}}</a>
-                                        </td>
-                                        <td>
-                                            <span class="red">
-                                                ￥{{item.sell_price}}
-                                            </span>
-                                        </td>
-                                        <td align="center">{{item.buycount}}</td>
-                                        <td>
-                                            <span class="red">
-                                                ￥{{item.sell_price * item.buycount}}
-                                            </span>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            <div class="line15"></div>
-                            <h2 class="slide-tit">
-                                <span>5、结算信息</span>
-                            </h2>
-                            <div class="buy-foot clearfix">
-                                <div class="left-box">
-                                    <dl>
-                                        <dt>订单备注(100字符以内)</dt>
-                                        <dd>
-                                            <textarea name="message" class="input" style="height:35px;"></textarea>
-                                        </dd>
-                                    </dl>
+                                    </label> -->
+                                    </li>
+                                </ul>
+                                <h2 class="slide-tit">
+                                    <span>4、商品清单</span>
+                                </h2>
+                                <div class="line15"></div>
+                                <table width="100%" border="0" align="center" cellpadding="8" cellspacing="0" class="cart-table">
+                                    <tbody>
+                                        <tr>
+                                            <th colspan="2" align="left">商品信息</th>
+                                            <th width="84" align="left">单价</th>
+                                            <th width="84" align="center">购买数量</th>
+                                            <th width="104" align="left">金额(元)</th>
+                                        </tr>
+                                        <!-- 商品订单信息 -->
+                                        <tr v-for="item in goodsList" :key="item.id">
+                                            <td width="68">
+                                                <a target="_blank" href="/goods/show-89.html">
+                                                    <img :src="item.img_url" class="img">
+                                                </a>
+                                            </td>
+                                            <td>
+                                                <a target="_blank" href="/goods/show-89.html">{{item.title}}</a>
+                                            </td>
+                                            <td>
+                                                <span class="red">
+                                                    ￥{{item.sell_price}}
+                                                </span>
+                                            </td>
+                                            <td align="center">{{item.buycount}}</td>
+                                            <td>
+                                                <span class="red">
+                                                    ￥{{item.sell_price * item.buycount}}
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <div class="line15"></div>
+                                <h2 class="slide-tit">
+                                    <span>5、结算信息</span>
+                                </h2>
+                                <div class="buy-foot clearfix">
+                                    <div class="left-box">
+                                        <dl>
+                                            <el-form-item label="订单备注:" prop="message">
+                                                <el-input style="width:300px" rows="3" type="textarea" resize="none" v-model="ruleForm.message" placeholder="100字以内"></el-input>
+                                            </el-form-item>
+                                        </dl>
+                                    </div>
+                                    <div class="right-box">
+                                        <p>
+                                            商品
+                                            <label class="price">{{totalCount}}</label> 件&nbsp;&nbsp;&nbsp;&nbsp; 商品金额：￥
+                                            <label id="goodsAmount" class="price">{{totalPrice}}</label> 元&nbsp;&nbsp;&nbsp;&nbsp;
+                                        </p>
+                                        <p>
+                                            运费：￥
+                                            <label id="expressFee" class="price">{{ruleForm.expressMoment}}</label> 元
+                                        </p>
+                                        <p class="txt-box">
+                                            应付总金额：￥
+                                            <label id="totalAmount" class="price">{{ruleForm.goodsAmount + ruleForm.expressMoment}}</label>
+                                        </p>
+                                        <p class="btn-box">
+                                            <router-link to="/cart">返回购物车</router-link>
+                                            <!-- <a class="btn button" href="/cart.html">返回购物车</a> -->
+                                            <a @click="submit" id="btnSubmit" class="btn submit">确认提交</a>
+                                        </p>
+                                    </div>
                                 </div>
-                                <div class="right-box">
-                                    <p>
-                                        商品
-                                        <label class="price">{{totalCount}}</label> 件&nbsp;&nbsp;&nbsp;&nbsp; 商品金额：￥
-                                        <label id="goodsAmount" class="price">{{totalPrice}}</label> 元&nbsp;&nbsp;&nbsp;&nbsp;
-                                    </p>
-                                    <p>
-                                        运费：￥
-                                        <label id="expressFee" class="price">0.00</label> 元
-                                    </p>
-                                    <p class="txt-box">
-                                        应付总金额：￥
-                                        <label id="totalAmount" class="price">0</label>
-                                    </p>
-                                    <p class="btn-box">
-                                        <a class="btn button" href="/cart.html">返回购物车</a>
-                                        <a id="btnSubmit" class="btn submit">确认提交</a>
-                                    </p>
-                                </div>
-                            </div>
+                            </el-form>
                         </div>
                     </div>
                 </div>
@@ -244,30 +182,152 @@
 </template>
 
 <script>
+// 引入distpicker 省市级联动
+import VDistpicker from "v-distpicker";
+
 export default {
   name: "order",
+  // 省市级联动组件
+  components: { VDistpicker },
   // 数据
   data: function() {
+    //   自定义验证
+    //  验证手机号
+    var checkMobile = (rule, value, callback) => {
+      //   console.log(rule);
+      //   console.log(value);
+      let exep = /^(0|86|17951)?(13[0-9]|15[012356789]|166|17[3678]|18[0-9]|14[57])[0-9]{8}$/;
+      // 正则测试方法  正则条件.test(要测试的数据)
+      // 判断是否符合正则条件，符合就返回
+      if (exep.test(value) == true) {
+        callback();
+      } else {
+        // 不符合正则条件就爆出错误
+        callback(new Error("请输入正确的手机号码格式"));
+      }
+
+      // setTimeout(() => {}, 1000);
+    };
+
+    // 验证邮箱
+    var checkEmail = (rule, value, callback) => {
+      let exep = /\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/;
+      if (exep.test(value) == true) {
+        callback();
+      } else {
+        callback(new Error("你输入的邮箱格式不正确"));
+      }
+    };
+
+    // 验证邮编
+    var checkPostCode = (rule, value, callback) => {
+      let exep = /^[1-9]\d{5}(?!\d)$/;
+      if (exep.test(value) == true) {
+        callback();
+      } else {
+        callback(new Error("你输入的邮编格式不正确"));
+      }
+    };
     return {
-      goodsList: []
+      goodsList: [],
+      ruleForm: {
+        accept_name: "", // 收货人姓名
+        area: {
+          province: { code: 110000, value: "北京市" },
+          city: { code: 110000, value: "北京城区" },
+          area: { code: 110001, value: "东城区" }
+        },
+        address: "", // 收货地址
+        mobile: "", // 手机号码
+        phone: "", // 联系电话
+        email: "", // 邮箱
+        post_code: "", // 邮编
+        payment_id: "6", // 支付方式
+        express_id: "1", // 快递方式
+        expressMoment: 20, // 运费
+        goodsAmount: "", // 商品总价
+        message: "", // 商品备注
+        goodsids: "", // 购买的商品的id
+        cargoodsobj: "" // 购物车的商品信息
+      },
+      // 验证规则
+      rules: {
+        // 收货人姓名
+        accept_name: [
+          { required: true, message: "请输入收货人姓名", trigger: "blur" }
+        ],
+        // 收货地址
+        address: [
+          {
+            required: true,
+            message: "请输入收货人的详细地址",
+            trigger: "blur"
+          },
+          { min: 1, max: 200, trigger: "blur" }
+        ],
+        // 手机号码
+        mobile: [{ required: true, validator: checkMobile, trigger: "blur" }],
+        // 邮箱
+        email: [{ required: true, validator: checkEmail, trigger: "blur" }],
+        // 邮编
+        post_code: [
+          { required: true, validator: checkPostCode, trigger: "blur" }
+        ]
+      }
     };
   },
   // 方法
-  methods: {},
+  methods: {
+    // 点击省市级联动后记录最后的选定状态
+    selected(value) {
+      // console.log(value);
+      // 将选定的省市区的数据给reluForm的area
+      this.ruleForm.area = value;
+    },
+    // 快递方式改变运费改变
+    expressChange(price) {
+      this.ruleForm.expressMoment = price;
+    },
+
+    // 确认提交
+    submit() {
+      this.$axios
+        .post("site/validate/order/setorder", this.ruleForm)
+        .then(response => {
+          // console.log(response);
+          let orderid = response.data.message.orderid;
+
+          // 去支付页
+          this.$router.push("/payOrder/" + orderid);
+
+          this.goodsList.forEach(v=>{
+              this.$store.commit('deleteGoods',v.id)
+          })
+        });
+    }
+  },
   // 生命周期函数
   created() {
     // console.log(this.$store.state.cartData);
     // console.log(this.$route.params.id);
     let ids = this.$route.params.id;
+    this.ruleForm.goodsids = ids;
     this.$axios.get(`site/comment/getshopcargoods/${ids}`).then(response => {
+      //
+      let cargoodsobj = {};
       response.data.message.forEach(v => {
-        for (const key in this.$store.state.cartData) {
-          //  console.log(this.$store.state.cartData[key]);
-          if (v.id == key) {
-            v.buycount = this.$store.state.cartData[key];
-          }
-        }
+        // for (const key in this.$store.state.cartData) {
+        //   //  console.log(this.$store.state.cartData[key]);
+        //   if (v.id == key) {
+        //     v.buycount = this.$store.state.cartData[key];
+        //   }
+        // }
+        v.buycount = this.$store.state.cartData[v.id];
+
+        // 将数据给到对象里
+        cargoodsobj[v.id] = v.buycount;
       });
+      this.ruleForm.cargoodsobj = cargoodsobj;
       // console.log(response.data.message);
       this.goodsList = response.data.message;
     });
@@ -283,12 +343,13 @@ export default {
       return totalCount;
     },
     // 总金额
-    totalPrice(){
-        let totalPrice = 0;
-        this.goodsList.forEach(v=>{
-            totalPrice += v.buycount * v.sell_price;
-        })
-        return totalPrice;
+    totalPrice() {
+      let totalPrice = 0;
+      this.goodsList.forEach(v => {
+        totalPrice += v.buycount * v.sell_price;
+      });
+      this.ruleForm.goodsAmount = totalPrice;
+      return totalPrice;
     }
   }
 };

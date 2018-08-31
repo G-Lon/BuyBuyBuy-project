@@ -19,7 +19,7 @@ import axios from 'axios';
 // 抽取axios的基地址
 axios.defaults.baseURL = "http://47.106.148.205:8899";
 //让ajax携带cookie
-axios.defaults.withCredentials=true;
+axios.defaults.withCredentials = true;
 // 加入到Vue原型中
 Vue.prototype.$axios = axios;
 
@@ -82,50 +82,56 @@ Vue.filter('capitalize', function (value) {
 const store = new Vuex.Store({
   // 数据
   state: {
-    cartData:JSON.parse(window.localStorage.getItem('cartInfo')) || {},
-    isLogin:false
+    cartData: JSON.parse(window.localStorage.getItem('cartInfo')) || {},
+    isLogin: false
   },
   // 暴露的的改变方法
   mutations: {
     // 增加数据方法
-    cartAdd(state,goodInfo){
+    cartAdd(state, goodInfo) {
       // 查看购物车中是否存在该商品
-      if(state.cartData[goodInfo.goodId] == undefined){
+      if (state.cartData[goodInfo.goodId] == undefined) {
         // 没有就把数据存进去，
         // vuex当需要在对象中添加新属性时，要使用Vue.set
         Vue.set(state.cartData, goodInfo.goodId, goodInfo.goodNum);
-      }else {
+      } else {
         // 如果有，那么就读取数商品对应的数据加上变化的的数据
         state.cartData[goodInfo.goodId] += goodInfo.goodNum;
       }
     },
     // 数据更新方法
-    updateGoodsNum(state,goodInfo){
+    updateGoodsNum(state, goodInfo) {
       state.cartData[goodInfo.goodId] = goodInfo.goodNum
     },
     // 删除数据的方法
-    deleteGoods(state,goodId){
-      Vue.delete(state.cartData,goodId);
+    deleteGoods(state, goodId) {
+      Vue.delete(state.cartData, goodId);
     },
     // 改变登录状态
-    changeLoginStatus(state,isLogin){
-      state.isLogin = isLogin 
+    changeLoginStatus(state, isLogin) {
+      state.isLogin = isLogin
     }
   },
-  getters:{
-    cartCount:state=>{
+  // 计算属性
+  getters: {
+    cartCount: state => {
       let num = 0;
-      for (const key in state.cartData) {
-        num += state.cartData[key]
+      if (!state.isLogin) {
+        num = 0;
+      } else {
+        for (const key in state.cartData) {
+          num += state.cartData[key]
+        }
       }
+
       return num
     }
   }
 })
 
 // 浏览器关闭时将数据保存到 localStorage
-window.onbeforeunload = function(){
-  window.localStorage.setItem('cartInfo',JSON.stringify(store.state.cartData))
+window.onbeforeunload = function () {
+  window.localStorage.setItem('cartInfo', JSON.stringify(store.state.cartData))
 }
 
 // 定义路由
@@ -152,18 +158,18 @@ let routes = [
   },
   // 商品购物车路由
   {
-    path:'/cart',
-    component:Cart
+    path: '/cart',
+    component: Cart
   },
   // 登录路由
   {
-    path:'/login',
-    component:Login
+    path: '/login',
+    component: Login
   },
   // 订单路由
   {
-    path:'/order/:id',
-    component:Order
+    path: '/order/:id',
+    component: Order
   }
 
 ]
@@ -175,20 +181,20 @@ let router = new VueRouter({
 
 
 // 增加导航守卫
-router.beforeEach((to,from,next)=>{
+router.beforeEach((to, from, next) => {
   // 判断要跳转的地址是不是order
-  if(to.path.indexOf('/order/')!=-1){
+  if (to.path.indexOf('/order/') != -1 || to.path.indexOf('/cart/') != -1) {
     // 如果是就要先判断是否登录
-    axios.get('/site/account/islogin').then(response=>{
-      if(response.data.code == 'nologin'){
+    axios.get('/site/account/islogin').then(response => {
+      if (response.data.code == 'nologin') {
         // 如果没登录，就去登录页面
         next('/login')
-      }else{
+      } else {
         // 已经登录就继续执行
         next()
       }
     })
-  }else(
+  } else(
     next()
   )
 })
@@ -199,9 +205,10 @@ new Vue({
   router,
   store,
   // 生命周期函数
-  beforeCreate(){
-    axios.get('site/account/islogin').then(response=>{
-      if(response.data.code == 'logined'){
+  beforeCreate() {
+    // 登录状态保持
+    axios.get('site/account/islogin').then(response => {
+      if (response.data.code == 'logined') {
         store.state.isLogin = true;
       }
     })

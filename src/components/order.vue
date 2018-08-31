@@ -49,7 +49,7 @@
                                     <dt>收货人姓名：</dt>
                                     <dd>
                                         <input name="book_id" id="book_id" type="hidden" value="0">
-                                        <input name="accept_name" id="accept_name" type="text" class="input" value="" datatype="s2-20" sucmsg=" ">
+                                        <input name="accept_name" id="accept_name" type="text" class="input" value="" datatype="s2-20" sucmsg=" " required>
                                         <span class="Validform_checktip">*收货人姓名</span>
                                     </dd>
                                 </dl>
@@ -218,8 +218,8 @@
                                 <div class="right-box">
                                     <p>
                                         商品
-                                        <label class="price">1</label> 件&nbsp;&nbsp;&nbsp;&nbsp; 商品金额：￥
-                                        <label id="goodsAmount" class="price">2299.00</label> 元&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <label class="price">{{totalCount}}</label> 件&nbsp;&nbsp;&nbsp;&nbsp; 商品金额：￥
+                                        <label id="goodsAmount" class="price">{{totalPrice}}</label> 元&nbsp;&nbsp;&nbsp;&nbsp;
                                     </p>
                                     <p>
                                         运费：￥
@@ -227,7 +227,7 @@
                                     </p>
                                     <p class="txt-box">
                                         应付总金额：￥
-                                        <label id="totalAmount" class="price">2299.00</label>
+                                        <label id="totalAmount" class="price">0</label>
                                     </p>
                                     <p class="btn-box">
                                         <a class="btn button" href="/cart.html">返回购物车</a>
@@ -249,9 +249,7 @@ export default {
   // 数据
   data: function() {
     return {
-      goodsList: [],
-      totalCount:0,
-      totalPrice:0
+      goodsList: []
     };
   },
   // 方法
@@ -270,10 +268,28 @@ export default {
           }
         }
       });
-    // console.log(response.data.message);
-      this.goodsList = response.data.message
-      
+      // console.log(response.data.message);
+      this.goodsList = response.data.message;
     });
+  },
+  // 计算属性
+  computed: {
+    // 总数量
+    totalCount() {
+      let totalCount = 0;
+      this.goodsList.forEach(v => {
+        totalCount += v.buycount;
+      });
+      return totalCount;
+    },
+    // 总金额
+    totalPrice(){
+        let totalPrice = 0;
+        this.goodsList.forEach(v=>{
+            totalPrice += v.buycount * v.sell_price;
+        })
+        return totalPrice;
+    }
   }
 };
 </script>

@@ -23,9 +23,10 @@
                         </span>
                         <!-- 会员中心 -->
                         <span v-show="$store.state.isLogin">
-                            <a href="" class="">会员中心</a>
+                            <!-- <a href="" class="">会员中心</a> -->
+                            <router-link to="/userCenter">会员中心</router-link>
                             <strong>|</strong>
-                            <a @click="logout">退出</a>
+                            <a @click="isShow = true">退出</a>
                             <strong>|</strong>
                         </span>
                         <router-link to="/cart/">
@@ -126,13 +127,19 @@
         </div>
 
         <!-- 点击退出弹出模态框 -->
-        <el-dialog title="提示" v-show="isShow" width="30%">
-            <span>是否退出</span>
-            <span slot="footer" class="dialog-footer">
-                <el-button>取 消</el-button>
-                <el-button type="primary">确 定</el-button>
-            </span>
-        </el-dialog>
+        <Modal v-model="isShow" width="360">
+            <p slot="header" style="color:#f60;text-align:center">
+                <Icon type="ios-information-circle"></Icon>
+                <span>退出确认</span>
+            </p>
+            <div style="text-align:center">
+                <p>你确定你要退出吗</p>
+            </div>
+            <div slot="footer" style="display:flex;justify-content: space-around">
+                <Button type="warning" size="large" @click="isShow=false">取消</Button>
+                <Button type="success" size="large" @click="logout">确定</Button>
+            </div>
+        </Modal>
     </div>
 </template>
 
@@ -148,9 +155,18 @@ export default {
   // 方法
   methods: {
     logout() {
-        this.isShow = true;
-        
-
+      // 模态框隐藏
+      this.isShow = false;
+      // 显示提示信息
+      this.$Message.success("你已退出，将返回到首页");
+      this.$axios.get("site/account/logout").then(response => {
+        // console.log(response);
+        if (response.data.status == 0) {
+          // 改变登录状态
+          this.$store.commit("changeLoginStatus", false);
+          this.$router.push("/index");
+        }
+      });
     }
   }
 };

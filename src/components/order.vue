@@ -294,15 +294,16 @@ export default {
       this.$axios
         .post("site/validate/order/setorder", this.ruleForm)
         .then(response => {
-          // console.log(response);
+        //   console.log(response);
           let orderid = response.data.message.orderid;
 
           // 去支付页
           this.$router.push("/payOrder/" + orderid);
 
-          this.goodsList.forEach(v=>{
-              this.$store.commit('deleteGoods',v.id)
-          })
+          // 已经购买的从购物车删除
+          this.goodsList.forEach(v => {
+            this.$store.commit("deleteGoods", v.id);
+          });
         });
     }
   },

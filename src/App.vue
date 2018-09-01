@@ -26,10 +26,10 @@
                             <!-- <a href="" class="">会员中心</a> -->
                             <router-link to="/userCenter">会员中心</router-link>
                             <strong>|</strong>
-                            <a @click="isShow = true">退出</a>
+                            <a @click="logout">退出</a>
                             <strong>|</strong>
                         </span>
-                        <router-link to="/cart/">
+                        <router-link to="/cart">
                             <i class="iconfont icon-cart"></i>购物车(
                             <span id="shoppingCartCount">
                                 <span>{{$store.getters.cartCount}}</span>
@@ -201,7 +201,8 @@ $(document).ready(function() {
 });
 </script>
 
-<style>
+<style lang="less">
+    
 /* 引入 头部底部的CSS 样式 */
 @import url("./assets/statics/site/css/style.css");
 
@@ -211,5 +212,13 @@ $(document).ready(function() {
 /* 覆盖样式*/
 #menu2 {
   background-image: none;
+}
+
+.search-box {
+    .input-box {
+        >input {
+            outline: none;
+        }
+    }
 }
 </style>

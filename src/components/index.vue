@@ -5,7 +5,7 @@
             <div class="location">
                 <span>当前位置：</span>
                 <a href="#/" class="router-link-active">首页</a> &gt;
-                <a href="#/site/goodslist" class="router-link-exact-active router-link-active">购物商城</a>
+                <a href="#/goodslist" class="router-link-exact-active router-link-active">购物商城</a>
             </div>
         </div>
         <!-- /路径导航结束 -->
@@ -98,7 +98,7 @@
                     <ul class="img-list">
                         <li v-for="item in item.datas" :key="item.artID">
                             <!-- <a :href="'#/site/goodsinfo/' + item.artID"  class=""> -->
-                            <router-link :to="'/site/goodsinfo/' + item.artID">
+                            <router-link :to="'/goodsinfo/' + item.artID">
                             <div class="img-box">
                                     <!-- <img :src="item.img_url"> -->
                                     <!-- 使用懒加载 -->

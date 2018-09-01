@@ -107,7 +107,7 @@
                                 <button class="button">继续购物</button>
                             </router-link>
 
-                            <button class="submit" @click="payOrder">立即结算</button>
+                            <button class="submit" @click="toOrder">立即结算</button>
                         </div>
                     </div>
                     <!--购物车底部-->
@@ -129,7 +129,7 @@ export default {
     };
   },
   // 方法
-  mothods: {
+  methods: {
     buycountChange(num, id) {
       //   console.log(num);
       // 当数据改变时，store仓库的数据也要发生改变
@@ -137,18 +137,15 @@ export default {
       this.$store.commit("updateGoodsNum", { goodId: id, goodNum: num });
     },
     delThis(id) {
-      this.$store.commit(
-        "deleteGoods",
-        this.cartList.forEach((v, i) => {
+      this.$store.commit("deleteGoods",this.cartList.forEach((v, i) => {
           if (v.id == id) {
             this.cartList.splice(i, 1);
           }
         })
       );
     },
-
     // 点击结算
-    payOrder() {
+    toOrder() {
       // console.log(this.priceCount);
       // 判断是否已选择商品
       if (this.priceCount <= 0) {
@@ -156,29 +153,29 @@ export default {
         return;
       }
 
-    //   选择了商品就跳转到order页面
-    let ids = '';
-    this.cartList.forEach(v=>{
-        if(v.isBuy){
-            ids += v.id;
-            ids += ','
+      // 选择了商品就跳转到order页面
+      let ids = "";
+      this.cartList.forEach(v => {
+        if (v.isBuy) {
+          ids += v.id;
+          ids += ",";
         }
-    })
-    ids = ids.slice(0,-1);
-    this.$router.push(`/order/${ids}`)
+      });
+      ids = ids.slice(0, -1);
+      this.$router.push(`/order/${ids}`);
 
-    //   // 判断是否已经登录
-    //   this.$axios("site/account/islogin").then(response => {
-    //     // console.log(response);
-    //     if (response.data.code == "nologin") {
-    //       // 未登录就跳转到登录页面
-    //       // 页面跳转需要使用到路由的
-    //       this.$router.push("/login");
-    //     } else {
-    //       // 登录了就跳转到结算页面
-    //       this.$router.push("/order");
-    //     }
-    //   });
+      //   // 判断是否已经登录
+      //   this.$axios("site/account/islogin").then(response => {
+      //     // console.log(response);
+      //     if (response.data.code == "nologin") {
+      //       // 未登录就跳转到登录页面
+      //       // 页面跳转需要使用到路由的
+      //       this.$router.push("/login");
+      //     } else {
+      //       // 登录了就跳转到结算页面
+      //       this.$router.push("/order");
+      //     }
+      //   });
     }
   },
   // 生命周期函数
@@ -223,7 +220,7 @@ export default {
       return totalPrice;
     }
   }
-}
+};
 </script>
 
 <style lang="less">

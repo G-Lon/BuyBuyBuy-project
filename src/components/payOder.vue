@@ -16,19 +16,19 @@
                             <a href="javascript:;" class="selected">支付中心</a>
                         </div>
                         <div class="form-box payment">
-                            <div class="el-row">
+                            <div class="el-row" v-for="item in goodsInfo" :key="item.id">
                                 <div class="el-col el-col-18">
                                     <div class="el-row">
                                         <div class="el-col el-col-12">
                                             <dl class="form-group">
                                                 <dt>订 单 号：</dt>
-                                                <dd>BD2018012523954579</dd>
+                                                <dd>{{item.order_no}}</dd>
                                             </dl>
                                         </div>
                                         <div class="el-col el-col-12">
                                             <dl class="form-group">
                                                 <dt>收货人姓名：</dt>
-                                                <dd>张三</dd>
+                                                <dd>{{item.accept_name}}</dd>
                                             </dl>
                                         </div>
                                     </div>
@@ -36,14 +36,14 @@
                                         <div class="el-col el-col-12">
                                             <dl class="form-group">
                                                 <dt>送货地址：</dt>
-                                                <dd>河北省,石家庄市,新华区
+                                                <dd>{{item.area}}
                                                 </dd>
                                             </dl>
                                         </div>
                                         <div class="el-col el-col-12">
                                             <dl class="form-group">
                                                 <dt>手机号码：</dt>
-                                                <dd>13811111111</dd>
+                                                <dd>{{item.mobile}}</dd>
                                             </dl>
                                         </div>
                                     </div>
@@ -51,7 +51,7 @@
                                         <div class="el-col el-col-12">
                                             <dl class="form-group">
                                                 <dt>支付金额：</dt>
-                                                <dd>10408 元</dd>
+                                                <dd>{{item.order_amount}} 元</dd>
                                             </dl>
                                         </div>
                                         <div class="el-col el-col-12">
@@ -65,15 +65,17 @@
                                         <div class="el-col el-col-12">
                                             <dl class="form-group">
                                                 <dt>备&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;注：</dt>
-                                                <dd>请尽快发货</dd>
+                                                <dd>{{item.message}}</dd>
                                             </dl>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="el-col el-col-6">
                                     <div id="container2">
-                                        <canvas width="300" height="300"></canvas>
+                                        <!-- <canvas width="300" height="300"></canvas> -->
+                                        <qrcode :value="'http://47.106.148.205:8899/site/validate/pay/alipay/'+ $route.params.orderid" :options="{ size: 200 }"></qrcode>
                                     </div>
+                                    <el-button @click="pay" size="mini" type="primary">点我跳转支付</el-button>
                                 </div>
                             </div>
                         </div>
@@ -87,22 +89,45 @@
 
 <script>
 export default {
-    name:"payOrder",
-    data:function () { 
-        return {
+  name: "payOrder",
+  data: function() {
+    return {
+      goodsInfo: [],
+    };
+  },
+  methods: {
+    pay() {
+      //   window.open() 在另一个页面打开新网页
+      window.open(
+        'http://47.106.148.205:8899/site/validate/pay/alipay/'+ this.$route.params.orderid
+      );
+    }
+  },
+  created() {
+    this.$axios
+      .get(`site/validate/order/getorder/${this.$route.params.orderid}`)
+      .then(response => {
+        // console.log(response);
+        this.goodsInfo = response.data.message;
+      });
 
-        }
-     },
-     methods:{
-
-     },
-     created(){
-         let orderid = this.$route.params.orderid;
-         this.$axios.get(`site/validate/order/getorder/${orderid}`).then(response=>{
-             console.log(response);
-             
-         })
-     },
+    // 查看订单是否支付
+    // 不停的发请求查看支付状态
+    let payStatus = setInterval(() => {
+      this.$axios
+        .get(`site/validate/order/getorder/${this.$route.params.orderid}`)
+        .then(response => {
+            // 查看状态码
+            if(response.data.message[0].status == 2){
+                this.$Message.success('付款成功，卖家正在处理订单');
+                setTimeout(() => {
+                    this.$router.push('/paySuccess/'+this.$route.params.orderid)
+                }, 500);
+            }
+            clearInterval(payStatus)
+        });
+    }, 1000);
+  }
 };
 </script>
 

@@ -19,7 +19,7 @@
                     </div>
 
                     <div id="loginform" name="loginform" class="login-box">
-                        <el-input v-model.trim="username" placeholder="请输入用户名"></el-input>
+                        <el-input v-model.trim="username" placeholder="请输入用户名" autofocus></el-input>
                         <br>
                         <br>
                         <el-input v-model="password" type="password" placeholder="请输入密码"></el-input>

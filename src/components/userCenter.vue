@@ -16,13 +16,10 @@
                                 <div class="bg-wrap">
                                     <div class="avatar-box">
                                         <a href="/user/center/avatar.html" class="img-box">
-                                            <i class="iconfont icon-user-full"></i>
+                                            <!-- <i class="iconfont icon-user-full"></i> -->
+                                            <img src="../assets/img/旺仔2.jpg" alt="">
                                         </a>
-                                        <h3>
-
-                                            ivanyb
-
-                                        </h3>
+                                        <h3>这是一个寂寞的天</h3>
                                         <p>
                                             <b>注册会员</b>
                                         </p>
@@ -80,15 +77,15 @@
                                     </div>
                                     <div class="center-head clearfix">
                                         <div class="img-box">
-                                            <i class="iconfont icon-user-full"></i>
+                                            <!-- <i class="iconfont icon-user-full"></i> -->
+                                            <img src="../assets/img/旺仔2.jpg" alt="">
                                         </div>
                                         <div class="list-box">
-                                            <h3>欢迎您~ ivanyb</h3>
+                                            <h3>欢迎您~ 这是一个寂寞的天</h3>
                                             <ul>
                                                 <li>组别：注册会员</li>
-                                                d
-                                                <li>手机：13987654321</li>
-                                                <li>Email:ivanyb1@qq.com</li>
+                                                <li>手机：13333333333</li>
+                                                <li>Email:133@qq.com</li>
                                             </ul>
                                         </div>
                                     </div>

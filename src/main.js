@@ -5,7 +5,6 @@ Vue.config.productionTip = false;
 
 // 引入路由
 import VueRouter from 'vue-router';
-
 // 注册VueRouter
 Vue.use(VueRouter)
 
@@ -26,6 +25,8 @@ Vue.prototype.$axios = axios;
 
 // 引入element-ui
 import ElementUI from 'element-ui';
+// 引入element-ui的样式 
+import 'element-ui/lib/theme-chalk/index.css';
 // 注册element-ui
 Vue.use(ElementUI);
 
@@ -49,8 +50,7 @@ import iView from 'iview';
 import 'iview/dist/styles/iview.css';
 // 注册iview
 Vue.use(iView)
-// 引入element-ui的样式 
-import 'element-ui/lib/theme-chalk/index.css';
+
 
 
 // 引入首页组件
@@ -67,9 +67,19 @@ import Order from './components/order.vue';
 import PayOrder from './components/payOder.vue';
 // 引入用户中心组件
 import User from './components/userCenter.vue';
+// 引入支付成功组件
+import PaySuccess from './components/paySuccess.vue';
+// 引入订单详情组件
+import OrderDetail from './components/orderDetail.vue';
+// 引入订单列表组件
+import OrderList from './components/orderList.vue';
 
 // 引入moment.js 
 import moment from 'moment';
+
+// 引入QRCode
+import VueQrcode from '@xkeshi/vue-qrcode';
+Vue.component(VueQrcode.name, VueQrcode);
 
 
 // 引入放大镜vue zoom
@@ -78,8 +88,14 @@ import ProductZoomer from 'vue-product-zoomer';
 Vue.use(ProductZoomer)
 
 // 定义全局过滤器
-Vue.filter('capitalize', function (value) {
-  return moment(value).format("YYYY年MM月DD日");
+Vue.filter('capitalize', function (value, formatVal) {
+  // 如果传入了格式化的参数，那么就使用传入的条件
+  if (formatVal != undefined) {
+    return moment(value).format(formatVal)
+  } else {
+    // 没有传入就按照规定的条件
+    return moment(value).format("YYYY年MM月DD日");
+  }
 })
 
 // 实例化store仓库
@@ -157,14 +173,16 @@ let routes = [
   },
   // 商品详情路由
   {
-    path: '/site/goodsinfo/:id',
+    path: '/goodsinfo/:id',
     component: GoodsInfo
   },
   // 商品购物车路由
   {
     path: '/cart',
     component: Cart,
-    meta:{chechLogin:true}
+    meta: {
+      chechLogin: true
+    }
   },
   // 登录路由
   {
@@ -175,19 +193,49 @@ let routes = [
   {
     path: '/order/:id',
     component: Order,
-    meta:{chechLogin:true}
+    meta: {
+      chechLogin: true
+    }
   },
-  // 支付订单组件
+  // 支付订单路由
   {
-    path:'/payOrder/:orderid/',
-    component:PayOrder,
-    meta:{chechLogin:true}
+    path: '/payOrder/:orderid/',
+    component: PayOrder,
+    meta: {
+      chechLogin: true
+    }
   },
-  // 用户中心组件
+  // 用户中心路由
   {
-    path:'/userCenter/',
-    component:User,
-    meta:{chechLogin:true}
+    path: '/userCenter/',
+    component: User,
+    meta: {
+      chechLogin: true
+    }
+  },
+  // 支付成功路由
+  {
+    path: '/paySuccess/:id',
+    component: PaySuccess,
+    meta: {
+      chechLogin: true
+    }
+  },
+  // 订单详情路由
+  {
+    path: '/orderDetail/:id',
+    component: OrderDetail,
+    meta: {
+      chechLogin: true
+    }
+  },
+  // 订单列表路由
+  {
+    path: '/orderList',
+    component: OrderList,
+    meta: {
+      checkLogin: true
+    }
   }
 
 ]

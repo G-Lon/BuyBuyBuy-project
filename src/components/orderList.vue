@@ -16,13 +16,10 @@
                             <div class="bg-wrap">
                                 <div class="avatar-box">
                                     <a href="/user/center/avatar.html" class="img-box">
-                                        <i class="iconfont icon-user-full"></i>
+                                        <!-- <i class="iconfont icon-user-full"></i> -->
+                                        <img src="../assets/img/旺仔2.jpg" alt="">
                                     </a>
-                                    <h3>
-
-                                        ivanyb
-
-                                    </h3>
+                                    <h3>下着有些伤心的雨</h3>
                                     <p>
                                         <b>注册会员</b>
                                     </p>
@@ -80,7 +77,7 @@
                                     </ul>
                                 </div>
                                 <!-- Element-ui分页器 -->
-                                <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage4" :page-sizes="[5, 10, 15, 20]" :page-size="100" layout="total, sizes, prev, pager, next, jumper" :total="totalCount">
+                                <el-pagination @size-change="pageSizeChange" @current-change="pageIndexChange" :current-page="pageIndex" :page-sizes="[5, 10, 15, 20]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount">
                                 </el-pagination>
                                 <div class="table-wrap">
                                     <table width="100%" border="0" cellspacing="0" cellpadding="0" class="ftable">
@@ -102,12 +99,14 @@
                                                 </td>
                                                 <td align="left">{{item.confirm_time | capitalize('YYYY-MM-DD HH:mm:ss')}}</td>
                                                 <td align="left">
-                                                    待付款
+                                                    {{item.statusName}}
                                                 </td>
                                                 <td align="left">
-                                                    <a href="#/site/member/orderinfo/12" class="">查看订单</a>
+                                                    <!-- <a href="#/site/member/orderinfo/12" class="">查看订单</a> -->
+                                                    <router-link :to="'/orderDetail/' + item.id">查看订单</router-link>
                                                     <br>
-                                                    <a v-if="item.status == 1" href="#/site/goods/payment/12" class="">去付款</a>
+                                                    <!-- <a v-if="item.status == 1" href="#/site/goods/payment/12" class="">去付款</a> -->
+                                                    <router-link :to="'/payOrder/' + item.id">去付款</router-link>
                                                     <br>
                                                 </td>
                                             </tr>
@@ -137,26 +136,45 @@ export default {
       totalCount: 0
     };
   },
-  methods: {},
+  methods: {
+    //  获取订单数据
+    getOrderList() {
+      this.$axios
+        .get(
+          `site/validate/order/userorderlist?pageIndex=${
+            this.pageIndex
+          }&pageSize=${this.pageSize}`
+        )
+        .then(response => {
+          // console.log(response);
+          this.orderList = response.data.message;
+          this.totalCount = response.data.totalcount;
+        });
+    },
+
+    // 页容量改变事件
+    pageSizeChange(size) {
+        this.pageSize = size
+      this.pageIndex = 1;
+      this.getOrderList();
+    },
+
+    // 页码改变事件
+    pageIndexChange(num) {
+      this.pageIndex = num;
+      this.getOrderList();
+    }
+  },
+  // 建立后
   created() {
-    this.$axios
-      .get(
-        `site/validate/order/userorderlist?pageIndex=${
-          this.pageIndex
-        }&pageSize=${this.pageSize}`
-      )
-      .then(response => {
-        //   console.log(response);
-        this.orderList = response.data.message;
-        this.totalCount = response.data.totalcount;
-      });
+    this.getOrderList();
   }
 };
 </script>
 
 <style lang="less">
-    .el-pagination {
-        text-align: center;
-    }
+.el-pagination {
+  text-align: center;
+}
 </style>
 

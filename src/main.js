@@ -93,7 +93,7 @@ Vue.filter('capitalize', function (value, formatVal) {
   if (formatVal != undefined) {
     return moment(value).format(formatVal)
   } else {
-    // 没有传入就按照规定的条件
+    // 没有传入就按照规定的条件 
     return moment(value).format("YYYY年MM月DD日");
   }
 })

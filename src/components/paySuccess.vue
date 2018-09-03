@@ -47,22 +47,27 @@
 export default {
   data: function() {
     return {
-      time: 5
+      time: 5,
+      timeId:undefined
     };
   },
   methods: {},
   // 渲染完成之后
   mounted() {
     // 设定一个定时器
-    let timeId = setInterval(() => {
+    this.timeId = setInterval(() => {
       // 时间每一秒自减
       this.time--;
       if (this.time == 0) {
         // 时间等于0的时候清除定时器，跳转到用户中心
-        clearInterval(timeId);
-        this.$router.push("/orderDetail/"+this.$route.params.id);
+        clearInterval(this.timeId);
+        this.$router.push("/orderDetail/" + this.$route.params.id);
       }
     }, 1000);
+  },
+  // 生命周期函数，销毁
+  destroyed() {
+      clearInterval(this.timeId)
   }
 };
 </script>

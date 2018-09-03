@@ -93,13 +93,15 @@ export default {
   data: function() {
     return {
       goodsInfo: [],
+      payStatus: 0
     };
   },
   methods: {
     pay() {
       //   window.open() 在另一个页面打开新网页
       window.open(
-        'http://47.106.148.205:8899/site/validate/pay/alipay/'+ this.$route.params.orderid
+        "http://47.106.148.205:8899/site/validate/pay/alipay/" +
+          this.$route.params.orderid
       );
     }
   },
@@ -107,26 +109,34 @@ export default {
     this.$axios
       .get(`site/validate/order/getorder/${this.$route.params.orderid}`)
       .then(response => {
-        // console.log(response);
+        // console.log(response.data.message[0].status);
         this.goodsInfo = response.data.message;
       });
 
     // 查看订单是否支付
     // 不停的发请求查看支付状态
-    let payStatus = setInterval(() => {
+    this.payStatus = setInterval(() => {
       this.$axios
         .get(`site/validate/order/getorder/${this.$route.params.orderid}`)
         .then(response => {
-            // 查看状态码
-            if(response.data.message[0].status == 2){
-                this.$Message.success('付款成功，卖家正在处理订单');
-                setTimeout(() => {
-                    this.$router.push('/paySuccess/'+this.$route.params.orderid)
-                }, 500);
-            }
-            clearInterval(payStatus)
+          //   console.log(response.data.message[0].status);
+
+          // 查看状态码
+          if (response.data.message[0].status == 2) {
+            this.$Message.success("付款成功，卖家正在处理订单");
+            setTimeout(() => {
+              this.$router.push("/paySuccess/" + this.$route.params.orderid);
+            }, 500);
+            clearInterval(this.payStatus);
+          } else {
+          }
         });
     }, 1000);
+  },
+  // 生命周期函数，销毁
+  destroyed() {
+    // console.log("销毁啦+payOrder");
+    clearInterval(this.payStatus);
   }
 };
 </script>

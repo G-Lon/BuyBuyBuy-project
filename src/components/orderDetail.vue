@@ -86,19 +86,19 @@
                                         <ul>
                                             <li class="first active">
                                                 <div class="progress">下单</div>
-                                                <div class="info">2017-10-25 21:38:15</div>
+                                                <div class="info">{{orderInfo.add_time | capitalize("YYYY-MM-DD  HH:mm:ss")}}</div>
                                             </li>
-                                            <li class="">
+                                            <li class="progress" :class="{active:orderInfo.status>1}">
                                                 <div class="progress">已付款</div>
-                                                <div class="info">2017-10-25 21:38:15</div>
+                                                <div class="info">{{orderInfo.confirm_time | capitalize("YYYY-MM-DD  HH:mm:ss")}}</div>
                                             </li>
-                                            <li class="">
+                                            <li class="progress" :class="{active:orderInfo.status>2}">
                                                 <div class="progress">已经发货</div>
-                                                <div class="info">2017-10-25 21:38:15</div>
+                                                <div class="info">{{orderInfo.express_time | capitalize("YYYY-MM-DD  HH:mm:ss")}}</div>
                                             </li>
-                                            <li class="last">
+                                            <li class="last" :class="{active:orderInfo.status>3}">
                                                 <div class="progress">已完成</div>
-                                                <div class="info">2017-10-25 21:38:15</div>
+                                                <div class="info">{{orderInfo.complete_time | capitalize("YYYY-MM-DD  HH:mm:ss")}}</div>
                                             </li>
                                         </ul>
                                     </div>
@@ -107,8 +107,10 @@
                                             <dd>
                                                 订单号：{{orderInfo.order_no}}
 
-                                                <a href="#/site/goods/payment/12" class="btn-pay">去付款</a>
-                                                <!---->
+                                                <!-- <a href="#/site/goods/payment/12" class="btn-pay">去付款</a> -->
+                                                <router-link v-if="orderInfo.status == 1" class="btn-pay" :to="'/payOrder/'+orderInfo.id">去付款</router-link>
+                                                <a v-if="orderInfo.status < 4" class="btn-pay" @click="sign">签收</a>
+                                                <a v-if="orderInfo.status == 4" class="btn-pay">{{orderInfo.statusName}}</a>
                                             </dd>
                                         </dl>
                                         <dl class="form-group">
@@ -213,12 +215,24 @@ export default {
       goodsList: []
     };
   },
-  methods: {},
+  methods: {
+      sign(){
+          this.$axios.get(`site/validate/order/complate/${this.$route.params.id}`).then(response=>{
+              console.log(response);
+              if(response.data.status == 0){
+                //   this.$router.push(`/orderDetail/${this.$route.params.id}`)
+                // this.$router.go(0)
+                this.orderInfo.status = 4
+              }
+              
+          })
+      }
+  },
   created() {
     this.$axios
       .get(`site/validate/order/getorderdetial/${this.$route.params.id}`)
       .then(response => {
-        console.log(response);
+        // console.log(response);
         this.orderInfo = response.data.message.orderinfo;
         this.goodsList = response.data.message.goodslist;
       });
@@ -233,6 +247,10 @@ export default {
 
 .avatar-box {
   height: auto;
+}
+
+.btn-pay {
+    margin-right: 10px;
 }
 </style>
 

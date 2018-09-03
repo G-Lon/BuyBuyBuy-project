@@ -66,7 +66,7 @@
                                     <td width="84" align="left">{{item.sell_price}}</td>
                                     <!-- 计数器 -->
                                     <td width="104" align="center">
-                                        <el-input-number @change="buycountChange($event,item.id)" size="mini" :min="0" v-model="item.bycount"></el-input-number>
+                                        <el-input-number @change="buycountChange($event,item.id)" size="mini" :min="1" :max='quantity' v-model="item.bycount"></el-input-number>
                                     </td>
                                     <td width="104" align="left">{{item.bycount * item.sell_price}}
                                         <td width="54" align="center">
@@ -125,7 +125,8 @@ export default {
   // 数据
   data: function() {
     return {
-      cartList: []
+      cartList: [],
+      quantity: 0
     };
   },
   // 方法
@@ -137,7 +138,9 @@ export default {
       this.$store.commit("updateGoodsNum", { goodId: id, goodNum: num });
     },
     delThis(id) {
-      this.$store.commit("deleteGoods",this.cartList.forEach((v, i) => {
+      this.$store.commit(
+        "deleteGoods",
+        this.cartList.forEach((v, i) => {
           if (v.id == id) {
             this.cartList.splice(i, 1);
           }
@@ -192,8 +195,15 @@ export default {
     // 根据id请求数据
     this.$axios.get(`site/comment/getshopcargoods/${ids}`).then(response => {
       response.data.message.forEach(v => {
+        // console.log(v);
         v.bycount = cartData[v.id];
         v.isBuy = false;
+
+        //  再次获取到商品id调用接口，获取该商品的库存量
+        this.$axios.get(`site/goods/getgoodsinfo/${v.id}`).then(response => {
+          // console.log(response);
+          this.quantity = response.data.message.goodsinfo.stock_quantity;
+        });
       });
       //   console.log(response.data.message);
       this.cartList = response.data.message;

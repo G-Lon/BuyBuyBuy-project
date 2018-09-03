@@ -33,8 +33,9 @@
                                                 </h2>
                                                 <div class="list">
                                                     <p>
-                                                        <a href="#/site/member/orderlist" class="">
-                                                            <i class="iconfont icon-arrow-right"></i>交易订单</a>
+                                                        <!-- <a href="#/site/member/orderlist" class=""><i class="iconfont icon-arrow-right"></i>交易订单</a> -->
+                                                        <router-link to="/orderList">
+                                                            <i class="iconfont icon-arrow-right"></i>交易订单</router-link>
                                                     </p>
                                                 </div>
                                             </li>
@@ -114,7 +115,22 @@
 </template>
 
 <script>
-export default {};
+export default {
+  function() {
+    return {
+      orderInfo: {
+        completed: 0,
+        unfinished: 0
+      }
+    };
+  },
+  methods:{
+
+  },
+  created() {
+      
+  },
+};
 </script>
 
 <style lang="less">

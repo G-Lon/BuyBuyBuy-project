@@ -147,14 +147,14 @@
                                     <li v-for="item in hotgoodslist" :key="item.id">
                                         <div class="img-box">
                                             <!-- <a href="#/site/goodsinfo/90" class=""> -->
-                                            <router-link :to="'/site/goodsinfo/' + item.id">
+                                            <router-link :to="'/goodsinfo/' + item.id">
                                                 <img :src="item.img_url">
                                             </router-link>
                                             <!-- </a> -->
                                         </div>
                                         <div class="txt-box">
                                             <!-- <a href="#/site/goodsinfo/90" class=""> -->
-                                            <router-link :to="'/site/goodsinfo/' + item.id">
+                                            <router-link :to="'/goodsinfo/' + item.id">
                                                 {{item.title}}
                                             </router-link>
                                             <span>{{item.add_time | capitalize}}</span>

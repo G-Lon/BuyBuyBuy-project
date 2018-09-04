@@ -180,9 +180,6 @@ let routes = [
   {
     path: '/cart',
     component: Cart,
-    meta: {
-      chechLogin: true
-    }
   },
   // 登录路由
   {

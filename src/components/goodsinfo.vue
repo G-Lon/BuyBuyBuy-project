@@ -55,7 +55,8 @@
                                         <dt>购买数量</dt>
                                         <dd>
                                             <div class="stock-box">
-                                                <el-input-number v-model="buyCount" @change="handleChange" :min="0" :max="goodsinfo.stock_quantity" size="mini" label="描述文字"></el-input-number>
+                                                <!-- 购买数量计数器 -->
+                                                <el-input-number v-model="buyCount" @change="handleChange" :min="1" :max="goodsinfo.stock_quantity" size="mini" label="描述文字"></el-input-number>
                                             </div>
                                             <span class="stock-txt">
                                                 库存
@@ -386,7 +387,8 @@ export default {
 }
 
 .pic-box {
-  width: 395px;
+  width: 360px;
+//   text-align: center;
   .thumb-list {
     display: flex;
     justify-content: center;

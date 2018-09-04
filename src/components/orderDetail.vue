@@ -86,19 +86,19 @@
                                         <ul>
                                             <li class="first active">
                                                 <div class="progress">下单</div>
-                                                <div class="info">{{orderInfo.add_time | capitalize("YYYY-MM-DD  HH:mm:ss")}}</div>
+                                                <div class="info">{{orderInfo.add_time | capitalize("YYYY-MM-DD HH:mm:ss")}}</div>
                                             </li>
                                             <li class="progress" :class="{active:orderInfo.status>1}">
                                                 <div class="progress">已付款</div>
-                                                <div class="info">{{orderInfo.confirm_time | capitalize("YYYY-MM-DD  HH:mm:ss")}}</div>
+                                                <div class="info">{{orderInfo.confirm_time | capitalize("YYYY-MM-DD HH:mm:ss")}}</div>
                                             </li>
                                             <li class="progress" :class="{active:orderInfo.status>2}">
                                                 <div class="progress">已经发货</div>
-                                                <div class="info">{{orderInfo.express_time | capitalize("YYYY-MM-DD  HH:mm:ss")}}</div>
+                                                <div class="info">{{orderInfo.express_time | capitalize("YYYY-MM-DD HH:mm:ss")}}</div>
                                             </li>
                                             <li class="last" :class="{active:orderInfo.status>3}">
                                                 <div class="progress">已完成</div>
-                                                <div class="info">{{orderInfo.complete_time | capitalize("YYYY-MM-DD  HH:mm:ss")}}</div>
+                                                <div class="info">{{orderInfo.complete_time | capitalize("YYYY-MM-DD HH:mm:ss")}}</div>
                                             </li>
                                         </ul>
                                     </div>
@@ -216,17 +216,18 @@ export default {
     };
   },
   methods: {
-      sign(){
-          this.$axios.get(`site/validate/order/complate/${this.$route.params.id}`).then(response=>{
-              console.log(response);
-              if(response.data.status == 0){
-                //   this.$router.push(`/orderDetail/${this.$route.params.id}`)
-                // this.$router.go(0)
-                this.orderInfo.status = 4
-              }
-              
-          })
-      }
+    sign() {
+      this.$axios
+        .get(`site/validate/order/complate/${this.$route.params.id}`)
+        .then(response => {
+          // console.log(response);
+          if (response.data.status == 0) {
+            //   this.$router.push(`/orderDetail/${this.$route.params.id}`)
+            // this.$router.go(0)
+            this.orderInfo.status = 4;
+          }
+        });
+    }
   },
   created() {
     this.$axios
@@ -250,7 +251,7 @@ export default {
 }
 
 .btn-pay {
-    margin-right: 10px;
+  margin-right: 10px;
 }
 </style>
 
